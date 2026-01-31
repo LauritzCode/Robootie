@@ -1,6 +1,7 @@
 #include "event_dispatcher.h"
 #include "core/event_queue.h"
 #include "brain/behavior_fsm.h"
+#include "system/system_controller.h"
 
 void dispatch_events(void) {
         

@@ -18,7 +18,7 @@ float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
 
 static float temp_detect() {
 
-    Vo = analogRead(temp_pin);
+    Vo = analogRead(TEMP_SENSOR_PIN);
     R2 = R1 * (1023.0 / (float)Vo - 1.0);
     logR2 = log(R2);
     T = (1.0 / (c1 + c2 * logR2 + c3 * logR2 * logR2 * logR2));
@@ -29,10 +29,10 @@ static float temp_detect() {
 
 static TempState classify_temp(int raw)
 {
-    if (raw < TEMP_COLD_THRESHOLD)
+    if (raw < TEMP_COLD)
         return TEMP_COLD;
 
-    if (raw > TEMP_HOT_THRESHOLD)
+    if (raw > TEMP_HOT)
         return TEMP_HOT;
 
     return TEMP_COMFY;
@@ -69,7 +69,7 @@ void temp_sensor_update(uint32_t now_ms) {
         }
         event_queue_push(event);
 
-        / ENTER event
+        // ENTER event
         switch (new_state)
         {
             case TEMP_COLD:  event.type = EVENT_TEMP_ENTER_COLD;  break;

@@ -1,7 +1,10 @@
+#include <Arduino.h>
 #include "system_controller.h"
 #include "brain/behavior_fsm.h"
 #include "actuators/eyes.h"
 #include "core/event.h"
+#include "sensors/temp_sensor.h"
+
 
 static TempState temp_related_type;
 
