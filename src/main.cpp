@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "core/event_queue.h"
+#include "core/event_dispatcher.h"
 #include "brain/behavior_fsm.h"
 #include "sensors/light_sensor.h"
 #include "actuators/eyes.h"
@@ -21,14 +22,7 @@ void loop(void)
     uint32_t now = millis();
 
     light_sensor_update(now);
-
-    Event event;
-
- if (event_queue_pop(&event))
-    {
-        behavior_fsm_handle_event(&event);
-    }
-
+    dispatch_events();
     system_controller_update(now);
     eyes_update(now);
 }
