@@ -4,6 +4,7 @@
 #include "brain/behavior_fsm.h"
 #include "sensors/light_sensor.h"
 #include "actuators/eyes.h"
+#include "system/system_controller.h"
 
 void setup(void)
 {
@@ -28,15 +29,6 @@ void loop(void)
         behavior_fsm_handle_event(&event);
     }
 
-    /* Map behavior → eye mode */
-    if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP)
-    {
-        eyes_set_mode(EYES_MODE_SLEEP);
-    }
-    else
-    {
-        eyes_set_mode(EYES_MODE_AWAKE);
-    }
-
+    system_controller_update(now);
     eyes_update(now);
 }
