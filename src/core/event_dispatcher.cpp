@@ -6,8 +6,9 @@ void dispatch_events(void) {
         
     Event event;
 
- if (event_queue_pop(&event))
+ while (event_queue_pop(&event))
     {
         behavior_fsm_handle_event(&event);
+        system_controller_handle_event(&event);
     }
 }
