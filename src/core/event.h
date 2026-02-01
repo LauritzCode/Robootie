@@ -14,6 +14,8 @@ typedef enum {
     // Light related events 
     EVENT_LIGHT_BECAME_DARK,
     EVENT_LIGHT_BECAME_BRIGHT,
+    EVENT_LIGHT_BECAME_SEMI_BRIGHT,
+    EVENT_LIGHT_BECAME_TOO_BRIGHT,
 
     // Temp related events
     EVENT_TEMP_ENTER_COLD,

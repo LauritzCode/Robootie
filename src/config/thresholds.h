@@ -1,6 +1,22 @@
 #pragma once
 
+
+// Light related 
+
+
+/*
+On average, darkness varies between 600 - 800 
+Default brightness is about 230-240. Point a light directly and it goes to 40 or so. 
+
+*/
 #define LIGHT_DARK_THRESHOLD 500
+#define LIGHT_TOO_BRIGHT_THRESHOLD 120
+#define LIGHT_SEMI_BRIGHT_THRESHOLD_MIN 501
+#define LIGHT_SEMI_BRIGHT_THRESHOLD_MAX 600
+
+
+
+// Temp related 
 #define TEMP_COLD 5
 #define TEMP_HOT 27
 #define HOT_GRACE_MS 5000
