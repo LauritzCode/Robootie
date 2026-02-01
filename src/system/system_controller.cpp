@@ -7,12 +7,10 @@
 #include "interpreters/light_interpreter.h"
 #include "sensors/light_sensor.h"
 #include "sensors/temp_sensor.h"
+#include "actuators/eyes_intent.h"
 
 
-
-static TempState temp_related_type;
-static ComfortState current_comfort = COMFORT_COMFY;
-static SystemIntent intent;
+static ComfortState current_comfort;
 
 void system_controller_init(void)
 {
@@ -22,29 +20,40 @@ void system_controller_init(void)
 void system_controller_update(uint32_t now_ms)
 {
     (void)now_ms;
+    EyesIntent intent = {};
+    
 
     ComfortFlags comfort = comfort_interpreter_get_flags();
     LightFlags light = light_interpreter_get_flags();
 
-    eyes_set_temp_comfort_flags(comfort);
-    eyes_set_light_comfort_flags(light);
-
-   EyesMode mode;
-
 /* Resolve intent */
     if (comfort.overheated)
     {
-        mode = EYES_MODE_AWAKE;
+        intent.base = EYES_BASE_AWAKE;
     }
-    else if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP)
-    {
-        mode = EYES_MODE_SLEEP;
+    else if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
+         if (light.semi_bright) {
+        intent.base = EYES_BASE_HALF_AWAKE;
+         } else
+        intent.base = EYES_BASE_SLEEP;
     } else
     {
-        mode = EYES_MODE_AWAKE;
+        intent.base = EYES_BASE_AWAKE;
     }
 
-    eyes_set_mode(mode);
+    
+/* Modifiers */
+    intent.sweat = comfort.hot || comfort.overheated;
+    intent.tremble = comfort.cold || comfort.chilled;
+
+    if (light.too_bright)
+    {
+        intent.squint = true;
+        intent.eye_height_L = SQUINT;
+        intent.eye_height_R = SQUINT;
+    }
+
+    eyes_set_intent(&intent);
 
 }
 

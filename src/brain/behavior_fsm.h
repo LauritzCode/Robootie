@@ -15,5 +15,5 @@ void behavior_fsm_handle_event(const Event *event);
 
 BehaviorState behavior_fsm_get_state(void);
 
-static void handle_asleep_state(const Event *event);
-static void handle_awake_state(const Event *event);
+void handle_asleep_state(const Event *event);
+void handle_awake_state(const Event *event);

@@ -9,10 +9,9 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
-
 #define EYES_MOOD_NEUTRAL 0
 
-
+static EyesIntent current_intent;
 static byte base_eye_height_L = 36;
 static byte base_eye_height_R = 36;
 static byte base_eye_width_L = 36;
@@ -29,20 +28,9 @@ static Adafruit_SSD1306 display(
 
 static RoboEyes<Adafruit_SSD1306> roboEyes(display);
 
-/* Internal state */
-static EyesMode current_mode;
-static ComfortFlags current_temp_comfort;
-static LightFlags current_light_comfort;
-
-
-void eyes_set_temp_comfort_flags(ComfortFlags flags)
+void eyes_set_intent(const EyesIntent *intent)
 {
-    current_temp_comfort = flags;
-}
-
-void eyes_set_light_comfort_flags(LightFlags flags)
-{
-    current_light_comfort = flags;
+    current_intent = *intent;
 }
 
 void eyes_init(void)
@@ -54,85 +42,6 @@ void eyes_init(void)
 
     roboEyes.begin(SCREEN_WIDTH, SCREEN_HEIGHT, 100);
     eyes_apply_defaults();
-
-    current_mode = EYES_MODE_SLEEP;
-}
-
-void eyes_set_mode(EyesMode mode)
-{
-    current_mode = mode;
-}
-
-void apply_base_pose(void) {
-    switch(current_mode)
-    {
-        case EYES_MODE_SLEEP:
-            roboEyes.close();
-            roboEyes.setAutoblinker(OFF,3,2);
-            roboEyes.setIdleMode(OFF, 2, 2);
-            break;
-
-        case EYES_MODE_AWAKE:
-            roboEyes.open();
-            roboEyes.setAutoblinker(ON, 3, 2);
-            roboEyes.setIdleMode(ON, 2, 2);
-            break;
-    }
-}
-
-void apply_comfort_modifiers(void) {
-
-    /* NOTE:
- * Temporary stacked modifier logic.
- * Will be replaced by EyesIntent resolver
- * once audio/microphone is added.
- */
-
- /*
-    if (current_mode == EYES_MODE_SLEEP)
-    {
-        if (current_light_comfort.semi_bright)
-        {
-            Serial.println("Ah? Is bright?");
-        }
-    }
-
-    if (current_mode == EYES_MODE_AWAKE) {
-        if(current_light_comfort.too_bright) {
-            Serial.println("Ahhh, too bright!");
-            roboEyes.setHeight((byte)SQUINT, (byte)SQUINT);
-        }
-    }
-
-
-    if (current_temp_comfort.overheated)
-    {
-        roboEyes.setSweat(1);
-        // roboEyes.setMood(TIRED); // TIRED FOR NOW, LATER WILL BE APPLIED AS MOOD
-    }
-    else if (current_temp_comfort.hot)
-    {
-        roboEyes.setSweat(1);   
-    }
-    else
-    {
-        roboEyes.setSweat(0);
-    }
-
-
-   if (current_temp_comfort.chilled)
-    {
-        roboEyes.setHFlicker(1);
-    }
-    else if (current_temp_comfort.cold)
-    {
-        roboEyes.setHFlicker(1);
-    }
-    else
-    {
-        roboEyes.setHFlicker(0);
-    }
-        */
 }
 
 void eyes_update(uint32_t now_ms) {
@@ -140,19 +49,31 @@ void eyes_update(uint32_t now_ms) {
 
      eyes_apply_defaults();
 
-     if (current_mode == EYES_MODE_SLEEP &&
-        current_light_comfort.semi_bright)
-    {
-        // override base pose entirely
-        roboEyes.open(1, 0);
-        roboEyes.setIdleMode(OFF, 2, 2);
-        roboEyes.setAutoblinker(OFF, 3, 2);
+    switch(current_intent.base) {
+        case EYES_BASE_SLEEP:
+        apply_base_sleep();
+        break;
+        case EYES_BASE_HALF_AWAKE:
+        apply_base_half_awake();
+        break;
+        case EYES_BASE_AWAKE:
+        default: 
+        apply_base_awake();
+        break;
     }
-    else
-    {
-        apply_base_pose();
-    }
-    apply_comfort_modifiers();
+
+
+    // Modifiers
+    if (current_intent.sweat)
+        roboEyes.setSweat(1);
+
+    if (current_intent.tremble)
+        roboEyes.setHFlicker(1);
+
+    if (current_intent.squint)
+        roboEyes.setHeight(current_intent.eye_height_L,
+                           current_intent.eye_height_R);
+
     roboEyes.update();
     }
 
@@ -167,11 +88,26 @@ void eyes_update(uint32_t now_ms) {
     roboEyes.setSweat(0);
     roboEyes.setHFlicker(0);
     roboEyes.setVFlicker(0);
-
-    // Borders / extras (only if you touched them elsewhere)
-    // roboEyes.setBorder(0);
-
-    // Mood reset will come later (emotion system)
-
     roboEyes.setMood(EYES_MOOD_NEUTRAL);
 }
+
+void apply_base_sleep() {
+    roboEyes.close();
+    roboEyes.setIdleMode(OFF, 2, 2);
+    roboEyes.setAutoblinker(OFF, 3, 2);
+}
+
+void apply_base_awake() {
+    roboEyes.open();
+    roboEyes.setIdleMode(ON, 2, 2);
+    roboEyes.setAutoblinker(ON, 3, 2);
+}
+
+void apply_base_half_awake() {
+    roboEyes.open(1, 0);
+    roboEyes.setIdleMode(OFF, 2, 2);
+    roboEyes.setAutoblinker(OFF, 3, 2);
+}
+
+
+
