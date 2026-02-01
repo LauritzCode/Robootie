@@ -23,7 +23,7 @@ void comfort_interpreter_update(uint32_t now_ms)
 
         if(!flags.overheated && (now_ms - hot_enter_time) >= HOT_CONFIRM_MS) {
             flags.overheated = true;
-            Serial.println("Is too hot :(.");
+            Serial.println("Is too hot :(");
         }
     } else {
 

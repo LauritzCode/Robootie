@@ -10,6 +10,10 @@
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
 
+static byte base_eye_height_L = 36;
+static byte base_eye_height_R = 36;
+
+
 static Adafruit_SSD1306 display(
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -21,11 +25,18 @@ static RoboEyes<Adafruit_SSD1306> roboEyes(display);
 
 /* Internal state */
 static EyesMode current_mode;
-static ComfortFlags current_comfort;
+static ComfortFlags current_temp_comfort;
+static LightFlags current_light_comfort;
 
-void eyes_set_comfort_flags(ComfortFlags flags)
+
+void eyes_set_temp_comfort_flags(ComfortFlags flags)
 {
-    current_comfort = flags;
+    current_temp_comfort = flags;
+}
+
+void eyes_set_light_comfort_flags(LightFlags flags)
+{
+    current_light_comfort = flags;
 }
 
 void eyes_init(void)
@@ -64,12 +75,36 @@ void apply_base_pose(void) {
 
 void apply_comfort_modifiers(void) {
 
-    if (current_comfort.overheated)
+    /* NOTE:
+ * Temporary stacked modifier logic.
+ * Will be replaced by EyesIntent resolver
+ * once audio/microphone is added.
+ */
+
+    if (current_mode == EYES_MODE_SLEEP)
+    {
+        if (current_light_comfort.semi_bright)
+        {
+            Serial.println("Ah? Is bright?");
+        }
+    }
+
+    if (current_mode == EYES_MODE_AWAKE) {
+        if(current_light_comfort.too_bright) {
+            Serial.println("Ahhh, too bright!");
+            roboEyes.setHeight((byte)SQUINT, (byte)SQUINT);
+        } else {
+            roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
+        }
+    }
+
+
+    if (current_temp_comfort.overheated)
     {
         roboEyes.setSweat(1);
         // roboEyes.setMood(TIRED); // TIRED FOR NOW, LATER WILL BE APPLIED AS MOOD
     }
-    else if (current_comfort.hot)
+    else if (current_temp_comfort.hot)
     {
         roboEyes.setSweat(1);   /* mild effect if you want */
     }
@@ -79,11 +114,11 @@ void apply_comfort_modifiers(void) {
     }
 
 
-   if (current_comfort.chilled)
+   if (current_temp_comfort.chilled)
     {
         roboEyes.setHFlicker(1);
     }
-    else if (current_comfort.cold)
+    else if (current_temp_comfort.cold)
     {
         roboEyes.setHFlicker(1);
     }
@@ -96,8 +131,18 @@ void apply_comfort_modifiers(void) {
 void eyes_update(uint32_t now_ms) {
      (void)now_ms;
 
-    apply_base_pose();
+     if (current_mode == EYES_MODE_SLEEP &&
+        current_light_comfort.semi_bright)
+    {
+        // override base pose entirely
+        roboEyes.open(1, 0);
+        roboEyes.setIdleMode(OFF, 2, 2);
+        roboEyes.setAutoblinker(OFF, 3, 2);
+    }
+    else
+    {
+        apply_base_pose();
+    }
     apply_comfort_modifiers();
-
     roboEyes.update();
     }

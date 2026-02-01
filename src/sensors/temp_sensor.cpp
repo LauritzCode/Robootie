@@ -29,10 +29,10 @@ static float temp_detect() {
 
 static TempState classify_temp(int raw)
 {
-    if (raw < TEMP_COLD)
+    if (raw < TEMP_COLD_THRESHOLD)
         return TEMP_COLD;
 
-    if (raw > TEMP_HOT)
+    if (raw > TEMP_HOT_THRESHOLD)
         return TEMP_HOT;
 
     return TEMP_COMFY;

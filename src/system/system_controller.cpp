@@ -4,6 +4,8 @@
 #include "actuators/eyes.h"
 #include "core/event.h"
 #include "interpreters/comfort_interpreter.h"
+#include "interpreters/light_interpreter.h"
+#include "sensors/light_sensor.h"
 #include "sensors/temp_sensor.h"
 
 
@@ -22,7 +24,10 @@ void system_controller_update(uint32_t now_ms)
     (void)now_ms;
 
     ComfortFlags comfort = comfort_interpreter_get_flags();
-    eyes_set_comfort_flags(comfort);
+    LightFlags light = light_interpreter_get_flags();
+
+    eyes_set_temp_comfort_flags(comfort);
+    eyes_set_light_comfort_flags(light);
 
    EyesMode mode;
 

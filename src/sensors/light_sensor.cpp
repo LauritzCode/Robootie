@@ -5,14 +5,6 @@
 #include "config/pins.h"
 #include "config/thresholds.h"
 
-typedef enum
-{
-    LIGHT_STATE_DARK = 0,
-    LIGHT_STATE_SEMI_BRIGHT,
-    LIGHT_STATE_BRIGHT,
-    LIGHT_STATE_TOO_BRIGHT
-} LightState;
-
 static LightState current_light_state;
 
 static uint32_t last_sample_time = 0;
@@ -61,6 +53,7 @@ void light_sensor_update(uint32_t now_ms)
     last_sample_time = now_ms;
 
     int raw = analogRead(LIGHT_SENSOR_PIN);
+    // Serial.println(raw);
     LightState new_state;
 
     /* Determine new state */

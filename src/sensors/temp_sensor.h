@@ -2,8 +2,7 @@
 
 #include <stdint.h>
 
-typedef enum 
-{
+typedef enum {
     TEMP_COMFY = 0,
     TEMP_HOT,
     TEMP_COLD

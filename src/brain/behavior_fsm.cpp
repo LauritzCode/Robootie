@@ -37,10 +37,6 @@ void behavior_fsm_handle_event(const Event *event) {
         Serial.println("FSM: ASLEEP -> AWAKE");
         break;
 
-        case EVENT_LIGHT_BECAME_SEMI_BRIGHT:
-        current_state = BEHAVIOR_SEMI_AWAKE;
-        Serial.println("Eh? Is bright?");
-        break;
 
         default: 
               /* Ignore all other events */

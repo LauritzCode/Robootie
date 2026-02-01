@@ -7,6 +7,8 @@
 #include "actuators/eyes.h"
 #include "system/system_controller.h"
 #include "sensors/temp_sensor.h"
+#include "interpreters/light_interpreter.h"
+
 
 
 void setup(void)
@@ -17,6 +19,8 @@ void setup(void)
     behavior_fsm_init();
     light_sensor_init();
     temp_sensor_init();
+    light_interpreter_init();
+    comfort_interpreter_init();
     eyes_init();
 }
 
@@ -28,6 +32,7 @@ void loop(void)
     temp_sensor_update(now);
     dispatch_events();
     comfort_interpreter_update(now);
+    light_interpreter_update(now);
     system_controller_update(now);
     eyes_update(now);
 }
