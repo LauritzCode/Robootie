@@ -1,5 +1,6 @@
 #pragma once
 
+#include "interpreters/comfort_interpreter.h"
 #include <stdint.h>
 
 typedef enum
@@ -10,7 +11,7 @@ typedef enum
 
 
 void eyes_init(void);
-
 void eyes_set_mode(EyesMode mode);
-
 void eyes_update(uint32_t now_ms);
+void eyes_set_comfort_flags(ComfortFlags flags);
+

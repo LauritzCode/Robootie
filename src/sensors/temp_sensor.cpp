@@ -69,7 +69,7 @@ void temp_sensor_update(uint32_t now_ms) {
         }
         event_queue_push(event);
 
-        / ENTER event
+        // ENTER event
         switch (new_state)
         {
             case TEMP_COLD:  event.type = EVENT_TEMP_ENTER_COLD;  break;
