@@ -1,0 +1,10 @@
+Sensors → Events
+Events → Interpreters
+Interpreters → Flags
+FSM → Behavior state
+
+Emotion system  ← (events + flags + time)
+        ↓
+System Controller
+        ↓
+EyesIntent / SoundIntent / MotionIntent

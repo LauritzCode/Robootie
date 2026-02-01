@@ -47,8 +47,6 @@ void eyes_init(void)
 void eyes_update(uint32_t now_ms) {
      (void)now_ms;
 
-     eyes_apply_defaults();
-
     switch(current_intent.base) {
         case EYES_BASE_SLEEP:
         apply_base_sleep();
@@ -78,11 +76,7 @@ void eyes_update(uint32_t now_ms) {
     }
 
 
-    static void eyes_apply_defaults(void)
-{
-    // Geometry
-    roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
-    roboEyes.setWidth(base_eye_width_L, base_eye_width_R);
+    static void eyes_apply_defaults(void) {
 
     // Effects
     roboEyes.setSweat(0);
@@ -92,18 +86,31 @@ void eyes_update(uint32_t now_ms) {
 }
 
 void apply_base_sleep() {
+
+    eyes_apply_defaults();
+        // Geometry
+     roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
+     roboEyes.setWidth(base_eye_width_L, base_eye_width_R);
+    
     roboEyes.close();
     roboEyes.setIdleMode(OFF, 2, 2);
     roboEyes.setAutoblinker(OFF, 3, 2);
 }
 
 void apply_base_awake() {
+
+    eyes_apply_defaults();
+        // Geometry
+     roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
+     roboEyes.setWidth(base_eye_width_L, base_eye_width_R);
+    
     roboEyes.open();
     roboEyes.setIdleMode(ON, 2, 2);
     roboEyes.setAutoblinker(ON, 3, 2);
 }
 
 void apply_base_half_awake() {
+    eyes_apply_defaults();
     roboEyes.open(1, 0);
     roboEyes.setIdleMode(OFF, 2, 2);
     roboEyes.setAutoblinker(OFF, 3, 2);
