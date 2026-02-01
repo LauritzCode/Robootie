@@ -10,9 +10,15 @@
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
 
+#define EYES_MOOD_NEUTRAL 0
+
+
 static byte base_eye_height_L = 36;
 static byte base_eye_height_R = 36;
+static byte base_eye_width_L = 36;
+static byte base_eye_width_R = 36;
 
+static void eyes_apply_defaults(void);
 
 static Adafruit_SSD1306 display(
     SCREEN_WIDTH,
@@ -47,6 +53,7 @@ void eyes_init(void)
     }
 
     roboEyes.begin(SCREEN_WIDTH, SCREEN_HEIGHT, 100);
+    eyes_apply_defaults();
 
     current_mode = EYES_MODE_SLEEP;
 }
@@ -81,6 +88,7 @@ void apply_comfort_modifiers(void) {
  * once audio/microphone is added.
  */
 
+ /*
     if (current_mode == EYES_MODE_SLEEP)
     {
         if (current_light_comfort.semi_bright)
@@ -93,8 +101,6 @@ void apply_comfort_modifiers(void) {
         if(current_light_comfort.too_bright) {
             Serial.println("Ahhh, too bright!");
             roboEyes.setHeight((byte)SQUINT, (byte)SQUINT);
-        } else {
-            roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
         }
     }
 
@@ -106,7 +112,7 @@ void apply_comfort_modifiers(void) {
     }
     else if (current_temp_comfort.hot)
     {
-        roboEyes.setSweat(1);   /* mild effect if you want */
+        roboEyes.setSweat(1);   
     }
     else
     {
@@ -126,10 +132,13 @@ void apply_comfort_modifiers(void) {
     {
         roboEyes.setHFlicker(0);
     }
+        */
 }
 
 void eyes_update(uint32_t now_ms) {
      (void)now_ms;
+
+     eyes_apply_defaults();
 
      if (current_mode == EYES_MODE_SLEEP &&
         current_light_comfort.semi_bright)
@@ -146,3 +155,23 @@ void eyes_update(uint32_t now_ms) {
     apply_comfort_modifiers();
     roboEyes.update();
     }
+
+
+    static void eyes_apply_defaults(void)
+{
+    // Geometry
+    roboEyes.setHeight(base_eye_height_L, base_eye_height_R);
+    roboEyes.setWidth(base_eye_width_L, base_eye_width_R);
+
+    // Effects
+    roboEyes.setSweat(0);
+    roboEyes.setHFlicker(0);
+    roboEyes.setVFlicker(0);
+
+    // Borders / extras (only if you touched them elsewhere)
+    // roboEyes.setBorder(0);
+
+    // Mood reset will come later (emotion system)
+
+    roboEyes.setMood(EYES_MOOD_NEUTRAL);
+}

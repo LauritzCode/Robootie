@@ -1,6 +1,10 @@
 * Add emotions 
 * Connect everything neatly. 
+
+
 * Add sound detection & its logic (Startle, talking, general noise)
 * Add buzzer 
 * Connect everything neatly and understand code. 
+
+
 * Add fun features: (Detect music and dance to it [new behavior type], annoyed by music if sleeping, one eye open if talking while sleeping)
