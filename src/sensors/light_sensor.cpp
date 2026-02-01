@@ -19,11 +19,20 @@ static const uint32_t SAMPLE_PERIOD_MS = 100;
 
 
 void light_sensor_init(void) {
+    Event event;
     pinMode(LIGHT_SENSOR_PIN, INPUT);
 
     int raw = analogRead(LIGHT_SENSOR_PIN);
 
     current_light_state = (raw < LIGHT_DARK_THRESHOLD) ? LIGHT_STATE_BRIGHT : LIGHT_STATE_DARK;
+
+    if(current_light_state == LIGHT_STATE_DARK) {
+            event.type = EVENT_LIGHT_BECAME_DARK;
+        } else {
+            event.type = EVENT_LIGHT_BECAME_BRIGHT;
+        }
+        
+    event_queue_push(event);
     last_sample_time = 0;
 }
 

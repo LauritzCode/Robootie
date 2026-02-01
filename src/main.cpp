@@ -27,6 +27,7 @@ void loop(void)
     light_sensor_update(now);
     temp_sensor_update(now);
     dispatch_events();
+    comfort_interpreter_update(now);
     system_controller_update(now);
     eyes_update(now);
 }

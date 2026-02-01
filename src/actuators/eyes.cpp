@@ -63,19 +63,33 @@ void apply_base_pose(void) {
 }
 
 void apply_comfort_modifiers(void) {
-    if(current_comfort.overheated) {
+
+    if (current_comfort.overheated)
+    {
         roboEyes.setSweat(1);
-        roboEyes.setMood(TIRED);
-    } else {
+        // roboEyes.setMood(TIRED); // TIRED FOR NOW, LATER WILL BE APPLIED AS MOOD
+    }
+    else if (current_comfort.hot)
+    {
+        roboEyes.setSweat(1);   /* mild effect if you want */
+    }
+    else
+    {
         roboEyes.setSweat(0);
     }
 
-    if(current_comfort.chilled) {
+
+   if (current_comfort.chilled)
+    {
         roboEyes.setHFlicker(1);
-        roboEyes.setVFlicker(1);
-    } else {
+    }
+    else if (current_comfort.cold)
+    {
+        roboEyes.setHFlicker(1);
+    }
+    else
+    {
         roboEyes.setHFlicker(0);
-        roboEyes.setVFlicker(0); 
     }
 }
 

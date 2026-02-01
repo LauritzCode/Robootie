@@ -8,6 +8,8 @@ typedef struct
 {
     bool overheated;
     bool chilled;
+    bool hot;
+    bool cold;
 } ComfortFlags;
 
 void comfort_interpreter_init(void);
