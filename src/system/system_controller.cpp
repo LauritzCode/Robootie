@@ -3,11 +3,9 @@
 #include "brain/behavior_fsm.h"
 #include "actuators/eyes.h"
 #include "core/event.h"
-<<<<<<< HEAD
 #include "interpreters/comfort_interpreter.h"
-=======
 #include "sensors/temp_sensor.h"
->>>>>>> fdd4fe08416134d877b87189b80a1a5fc0c83211
+
 
 
 static TempState temp_related_type;

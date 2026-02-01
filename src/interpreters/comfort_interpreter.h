@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "core/event.h"
+#include "system/system_controller.h"
 
 typedef struct
 {

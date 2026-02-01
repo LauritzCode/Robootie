@@ -1,12 +1,9 @@
 #include "event_dispatcher.h"
 #include "core/event_queue.h"
 #include "brain/behavior_fsm.h"
-<<<<<<< HEAD
 #include "interpreters/comfort_interpreter.h"
-
-=======
 #include "system/system_controller.h"
->>>>>>> fdd4fe08416134d877b87189b80a1a5fc0c83211
+
 
 void dispatch_events(void) {
         

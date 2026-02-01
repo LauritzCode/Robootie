@@ -13,7 +13,7 @@ typedef enum {
 typedef enum {
     INTENT_ALERT,
     INTENT_REST
-} SystemIntent
+} SystemIntent;
 
 
 void system_controller_init(void);
