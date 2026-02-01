@@ -21,6 +21,12 @@ static RoboEyes<Adafruit_SSD1306> roboEyes(display);
 
 /* Internal state */
 static EyesMode current_mode;
+static ComfortFlags current_comfort;
+
+void eyes_set_comfort_flags(ComfortFlags flags)
+{
+    current_comfort = flags;
+}
 
 void eyes_init(void)
 {
@@ -39,25 +45,45 @@ void eyes_set_mode(EyesMode mode)
     current_mode = mode;
 }
 
-void eyes_update(uint32_t now_ms) {
-    (void)now_ms;
-
-    switch(current_mode) {
+void apply_base_pose(void) {
+    switch(current_mode)
+    {
         case EYES_MODE_SLEEP:
-        roboEyes.close();
-        roboEyes.setAutoblinker(OFF, 3, 2);
-        roboEyes.setIdleMode(OFF, 2, 2);
-        break;
+            roboEyes.close();
+            roboEyes.setAutoblinker(OFF,3,2);
+            roboEyes.setIdleMode(OFF, 2, 2);
+            break;
 
         case EYES_MODE_AWAKE:
             roboEyes.open();
             roboEyes.setAutoblinker(ON, 3, 2);
             roboEyes.setIdleMode(ON, 2, 2);
             break;
-
-        default:
-            break;
     }
+}
+
+void apply_comfort_modifiers(void) {
+    if(current_comfort.overheated) {
+        roboEyes.setSweat(1);
+        roboEyes.setMood(TIRED);
+    } else {
+        roboEyes.setSweat(0);
+    }
+
+    if(current_comfort.chilled) {
+        roboEyes.setHFlicker(1);
+        roboEyes.setVFlicker(1);
+    } else {
+        roboEyes.setHFlicker(0);
+        roboEyes.setVFlicker(0); 
+    }
+}
+
+void eyes_update(uint32_t now_ms) {
+     (void)now_ms;
+
+    apply_base_pose();
+    apply_comfort_modifiers();
 
     roboEyes.update();
     }

@@ -22,21 +22,24 @@ void system_controller_update(uint32_t now_ms)
     (void)now_ms;
 
     ComfortFlags comfort = comfort_interpreter_get_flags();
+    eyes_set_comfort_flags(comfort);
 
+   EyesMode mode;
+
+/* Resolve intent */
     if (comfort.overheated)
     {
-        eyes_set_mode(EYES_MODE_AWAKE);
+        mode = EYES_MODE_AWAKE;
+    }
+    else if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP)
+    {
+        mode = EYES_MODE_SLEEP;
+    } else
+    {
+        mode = EYES_MODE_AWAKE;
     }
 
-    /* Resolve intent (light-only, trivial version) */
-    if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP)
-    {
-        eyes_set_mode(EYES_MODE_SLEEP);
-    }
-    else
-    {
-        eyes_set_mode(EYES_MODE_AWAKE);
-    }
+    eyes_set_mode(mode);
 
 }
 
