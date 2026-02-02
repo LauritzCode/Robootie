@@ -6,8 +6,11 @@
 #include "sensors/light_sensor.h"
 #include "actuators/eyes.h"
 #include "system/system_controller.h"
+#include "system/simulation.h"
 #include "sensors/temp_sensor.h"
 #include "interpreters/light_interpreter.h"
+#include "interpreters/emotion_interpreter.h"
+
 
 
 
@@ -27,12 +30,19 @@ void setup(void)
 void loop(void)
 {
     uint32_t now = millis();
-
+    bool done = false;
     light_sensor_update(now);
     temp_sensor_update(now);
     dispatch_events();
+    emotion_interpreter_update(now);
     comfort_interpreter_update(now);
     light_interpreter_update(now);
     system_controller_update(now);
     eyes_update(now);
+    
+
+
+    if (Serial.read() == 's')
+    simulation_push_event(EVENT_SOUND_BURST, now);
+
 }

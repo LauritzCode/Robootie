@@ -31,3 +31,5 @@ Default brightness is about 230-240. Point a light directly and it goes to 40 or
 // Eyes configs
 
  #define SQUINT 20
+ #define EYE_BASE_HEIGHT 36
+ #define EYE_BASE_WIDTH 36

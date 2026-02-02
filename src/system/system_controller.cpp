@@ -3,11 +3,13 @@
 #include "brain/behavior_fsm.h"
 #include "actuators/eyes.h"
 #include "core/event.h"
+#include "config/thresholds.h"
 #include "interpreters/comfort_interpreter.h"
 #include "interpreters/light_interpreter.h"
 #include "sensors/light_sensor.h"
 #include "sensors/temp_sensor.h"
 #include "actuators/eyes_intent.h"
+#include "interpreters/emotion_interpreter.h"
 
 
 static ComfortState current_comfort;
@@ -20,13 +22,42 @@ void system_controller_init(void)
 void system_controller_update(uint32_t now_ms)
 {
     (void)now_ms;
-    EyesIntent intent = {};
+    EyesIntent intent = {0};
+
+    /* base geometry */
+    intent.eye_height_L = EYE_BASE_HEIGHT;
+    intent.eye_height_R = EYE_BASE_HEIGHT;
+    intent.eye_width_L  = EYE_BASE_WIDTH;
+    intent.eye_width_R  = EYE_BASE_WIDTH;
+
     
 
     ComfortFlags comfort = comfort_interpreter_get_flags();
     LightFlags light = light_interpreter_get_flags();
+    EmotionState emo = emotion_interpreter_get_state();
 
-/* Resolve intent */
+
+    // Resolve emotions
+    if (emo.transient == TRANSIENT_STARTLED)
+{
+    intent.base = EYES_BASE_AWAKE;
+    intent.tremble = true;
+    intent.eye_height_L = EYE_BASE_HEIGHT - 6;
+    intent.eye_height_R = EYE_BASE_HEIGHT - 6;
+
+    eyes_set_intent(&intent);
+    return;   
+}
+
+   if (emo.base == EMOTION_TIRED)
+    intent.eye_height_L = intent.eye_height_R = EYE_BASE_HEIGHT - 4;
+
+   if (emo.base == EMOTION_SAD)
+    intent.eye_height_L = intent.eye_height_R = EYE_BASE_HEIGHT - 6;
+
+
+
+// Resolve intent 
     if (comfort.overheated)
     {
         intent.base = EYES_BASE_AWAKE;

@@ -27,6 +27,13 @@ typedef enum {
     EVENT_TEMP_ENTER_HOT,
     EVENT_TEMP_EXIT_HOT,
 
+    // Sound related events
+
+    EVENT_SOUND_BURST,
+    EVENT_SOUND_TALKING,
+    EVENT_SOUND_MUSIC_DETECTED,
+    EVENT_SOUND_GENERAL_NOISE
+
 } EventType;
 
 typedef struct
