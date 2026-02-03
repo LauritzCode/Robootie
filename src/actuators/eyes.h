@@ -2,6 +2,7 @@
 
 #include "interpreters/comfort_interpreter.h"
 #include "interpreters/light_interpreter.h"
+#include "interpreters/emotion_interpreter.h"
 #include <stdint.h>
 #include "eyes_intent.h"
 #include "config/thresholds.h"

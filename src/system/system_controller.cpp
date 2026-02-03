@@ -14,6 +14,8 @@
 
 static ComfortState current_comfort;
 
+
+
 void system_controller_init(void)
 {
     /* nothing yet */
@@ -22,7 +24,7 @@ void system_controller_init(void)
 void system_controller_update(uint32_t now_ms)
 {
     (void)now_ms;
-    EyesIntent intent = {0};
+    EyesIntent intent = {};
 
     /* base geometry */
     intent.eye_height_L = EYE_BASE_HEIGHT;
@@ -41,26 +43,32 @@ void system_controller_update(uint32_t now_ms)
     if (emo.transient == TRANSIENT_STARTLED)
 {
     intent.base = EYES_BASE_AWAKE;
+     intent.mood = EYES_MOOD_SAD;
+    intent.override_mood = true;
     intent.tremble = true;
-    intent.eye_height_L = EYE_BASE_HEIGHT - 6;
-    intent.eye_height_R = EYE_BASE_HEIGHT - 6;
+    intent.override_eye_height = true;
+    intent.eye_height_L = EYE_BASE_HEIGHT + 20;
+    intent.eye_height_R = EYE_BASE_HEIGHT + 20;
+    intent.eye_width_L = EYE_BASE_HEIGHT - 20;
+    intent.eye_width_R = EYE_BASE_HEIGHT - 20;
 
     eyes_set_intent(&intent);
     return;   
 }
 
-   if (emo.base == EMOTION_TIRED)
-    intent.eye_height_L = intent.eye_height_R = EYE_BASE_HEIGHT - 4;
-
-   if (emo.base == EMOTION_SAD)
-    intent.eye_height_L = intent.eye_height_R = EYE_BASE_HEIGHT - 6;
-
-
+switch(emo.base) {
+     case EMOTION_SAD:
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_SAD;
+        break;
+}
+    
 
 // Resolve intent 
     if (comfort.overheated)
     {
         intent.base = EYES_BASE_AWAKE;
+        intent.mood = EYES_MOOD_TIRED;
     }
     else if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
          if (light.semi_bright) {
@@ -80,6 +88,7 @@ void system_controller_update(uint32_t now_ms)
     if (light.too_bright)
     {
         intent.squint = true;
+        intent.override_eye_height = true;
         intent.eye_height_L = SQUINT;
         intent.eye_height_R = SQUINT;
     }

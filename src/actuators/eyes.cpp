@@ -68,9 +68,22 @@ void eyes_update(uint32_t now_ms) {
     if (current_intent.tremble)
         roboEyes.setHFlicker(1);
 
-    if (current_intent.squint)
+    if (current_intent.override_eye_height)
         roboEyes.setHeight(current_intent.eye_height_L,
                            current_intent.eye_height_R);
+
+    if(current_intent.override_mood) {
+        switch(current_intent.mood) {
+            case EYES_MOOD_SAD:
+            roboEyes.setMood(TIRED);
+            break;
+            case EYES_MOOD_TIRED:
+            roboEyes.setMood(TIRED);
+            break;
+        }
+    }
+    
+
 
     roboEyes.update();
     }
