@@ -30,7 +30,6 @@ void setup(void)
 void loop(void)
 {
     uint32_t now = millis();
-    bool done = false;
     light_sensor_update(now);
     temp_sensor_update(now);
     dispatch_events();
@@ -45,4 +44,5 @@ void loop(void)
     if (Serial.read() == 's')
     simulation_push_event(EVENT_SOUND_BURST, now);
 
+    
 }
