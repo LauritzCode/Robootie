@@ -17,7 +17,8 @@ typedef enum {
 typedef enum {
     TRANSIENT_NONE = 0,
     TRANSIENT_STARTLED,
-    TRANSIENT_LAUGHING
+    TRANSIENT_LAUGHING,
+    TRANSIENT_MUSIC
 } TransientEmotion;
 
 typedef struct {

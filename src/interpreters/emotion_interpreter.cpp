@@ -31,6 +31,11 @@ void emotion_interpreter_handle_event(const Event *event)
             transient_end_time = event->timestamp_ms + 1500;
             break;
 
+        case EVENT_SOUND_MUSIC_DETECTED:
+            current_emotion.transient = TRANSIENT_MUSIC;
+            transient_end_time = event->timestamp_ms + 5500;
+            break;
+
         default:
             break;
     }
@@ -54,6 +59,13 @@ void emotion_interpreter_update(uint32_t now_ms)
     {
         current_emotion.base = EMOTION_NEUTRAL;
     }
+
+    if (current_emotion.transient == TRANSIENT_MUSIC &&
+    now_ms >= transient_end_time)
+{
+    current_emotion.transient = TRANSIENT_NONE;
+}
+
 }
 
 EmotionState emotion_interpreter_get_state(void)

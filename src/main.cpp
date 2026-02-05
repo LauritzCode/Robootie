@@ -10,6 +10,7 @@
 #include "sensors/temp_sensor.h"
 #include "interpreters/light_interpreter.h"
 #include "interpreters/emotion_interpreter.h"
+#include "actuators/buzzer.h"
 
 
 
@@ -37,12 +38,24 @@ void loop(void)
     comfort_interpreter_update(now);
     light_interpreter_update(now);
     system_controller_update(now);
+    buzzer_apply_intent(system_controller_get_sound_intent());
+    buzzer_update(now);
     eyes_update(now);
     
 
 
-    if (Serial.read() == 's')
-    simulation_push_event(EVENT_SOUND_BURST, now);
+    if (Serial.available())
+{
+    char cmd = Serial.read();
+
+    if (cmd == 's')
+        simulation_push_event(EVENT_SOUND_BURST, now);
+
+    if (cmd == 'm')
+        simulation_push_event(EVENT_SOUND_MUSIC_DETECTED, now);
+}
+
+
 
     
 }

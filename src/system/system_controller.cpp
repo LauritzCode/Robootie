@@ -10,10 +10,18 @@
 #include "sensors/temp_sensor.h"
 #include "actuators/eyes_intent.h"
 #include "interpreters/emotion_interpreter.h"
+#include "actuators/sound_intent.h"
+
+
+static SoundIntent g_sound_intent;
 
 
 static ComfortState current_comfort;
 
+const SoundIntent* system_controller_get_sound_intent(void)
+{
+    return &g_sound_intent;
+}
 
 
 void system_controller_init(void)
@@ -25,6 +33,10 @@ void system_controller_update(uint32_t now_ms)
 {
     (void)now_ms;
     EyesIntent intent = {};
+    g_sound_intent.play = false;
+    g_sound_intent.pattern = SOUND_NONE;
+    g_sound_intent.intensity = 0;
+
 
     /* base geometry */
     intent.eye_height_L = EYE_BASE_HEIGHT;
@@ -43,7 +55,7 @@ void system_controller_update(uint32_t now_ms)
     if (emo.transient == TRANSIENT_STARTLED)
 {
     intent.base = EYES_BASE_AWAKE;
-     intent.mood = EYES_MOOD_SAD;
+    intent.mood = EYES_MOOD_SAD;
     intent.override_mood = true;
     intent.tremble = true;
     intent.override_eye_height = true;
@@ -51,10 +63,28 @@ void system_controller_update(uint32_t now_ms)
     intent.eye_height_R = EYE_BASE_HEIGHT + 20;
     intent.eye_width_L = EYE_BASE_HEIGHT - 20;
     intent.eye_width_R = EYE_BASE_HEIGHT - 20;
-
+    g_sound_intent.play = true;
+    g_sound_intent.pattern = SOUND_BRIEF_REACT;
     eyes_set_intent(&intent);
     return;   
 }
+
+if (emo.transient == TRANSIENT_MUSIC)
+
+
+{
+    intent.base = EYES_BASE_AWAKE;
+    intent.mood = EYES_MOOD_HAPPY;
+    intent.override_mood = true;
+
+    g_sound_intent.play = true;
+    g_sound_intent.pattern = SOUND_LAUGH;
+
+    eyes_set_intent(&intent);
+    return;
+}
+
+
 
 switch(emo.base) {
      case EMOTION_SAD:
@@ -95,6 +125,8 @@ switch(emo.base) {
 
     eyes_set_intent(&intent);
 
+    
+
 }
 
 void system_controller_handle_event(const Event *event)
@@ -124,6 +156,10 @@ void system_controller_handle_event(const Event *event)
         case EVENT_TEMP_EXIT_COLD:
             Serial.println("Controller: exited COLD");
             break;
+
+        case EVENT_SOUND_MUSIC_DETECTED: 
+            Serial.println("Oh? is music?");
+            break;    
 
         default:
             break;
