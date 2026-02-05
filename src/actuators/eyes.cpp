@@ -80,6 +80,8 @@ void eyes_update(uint32_t now_ms) {
             case EYES_MOOD_TIRED:
             roboEyes.setMood(TIRED);
             break;
+            case EYES_MOOD_HAPPY:
+            roboEyes.setMood(HAPPY);
         }
     }
     

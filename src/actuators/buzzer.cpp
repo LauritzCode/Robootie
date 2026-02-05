@@ -16,40 +16,10 @@ static uint8_t step_index = 0;
 static bool playing = false;
 static uint32_t last_step_time = 0;
 
+static void generate_brief_react_pattern();
+static void generate_laugh_pattern();
+static void generate_spook_pattern();
 
-static void generate_brief_react_pattern()
-{
-    pattern_length = 6;
-
-    for (uint8_t i = 0; i < pattern_length; i++)
-    {
-        pattern_buffer[i].frequency = random(1200, 2500);
-        pattern_buffer[i].duration_ms = random(60, 140);
-    }
-}
-
-static void generate_laugh_pattern()
-{
-    pattern_length = 6;
-
-    for (uint8_t i = 0; i < pattern_length; i++)
-    {
-        pattern_buffer[i].frequency = random(700, 1800);
-        pattern_buffer[i].duration_ms = random(50, 120);
-    }
-}
-
-
-static void generate_spook_pattern()
-{
-    pattern_length = 6;
-
-    for (uint8_t i = 0; i < pattern_length; i++)
-    {
-        pattern_buffer[i].frequency = random(1500, 2600);
-        pattern_buffer[i].duration_ms = random(80, 140);
-    }
-}
 
 void buzzer_apply_intent(const SoundIntent* intent)
 {
@@ -111,3 +81,40 @@ bool buzzer_is_busy(void)
 }
 
 
+
+
+// 
+
+static void generate_brief_react_pattern()
+{
+    pattern_length = 6;
+
+    for (uint8_t i = 0; i < pattern_length; i++)
+    {
+        pattern_buffer[i].frequency = random(1200, 2500);
+        pattern_buffer[i].duration_ms = random(60, 140);
+    }
+}
+
+static void generate_laugh_pattern()
+{
+    pattern_length = 6;
+
+    for (uint8_t i = 0; i < pattern_length; i++)
+    {
+        pattern_buffer[i].frequency = random(700, 1800);
+        pattern_buffer[i].duration_ms = random(50, 120);
+    }
+}
+
+
+static void generate_spook_pattern()
+{
+    pattern_length = 6;
+
+    for (uint8_t i = 0; i < pattern_length; i++)
+    {
+        pattern_buffer[i].frequency = random(1500, 2600);
+        pattern_buffer[i].duration_ms = random(80, 140);
+    }
+}
