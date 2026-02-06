@@ -4,7 +4,6 @@
 typedef enum SoundPatternID
 {
     SOUND_NONE = 0,
-
     SOUND_BRIEF_REACT,
     SOUND_LAUGH,
     SOUND_SPOOK

@@ -14,9 +14,12 @@
 
 
 static SoundIntent g_sound_intent;
-
-
 static ComfortState current_comfort;
+
+static uint32_t laugh_until_ms = 0;
+static uint32_t scream_until_ms = 0;
+static TransientEmotion last_transient = TRANSIENT_NONE;
+
 
 const SoundIntent* system_controller_get_sound_intent(void)
 {
@@ -37,7 +40,6 @@ void system_controller_update(uint32_t now_ms)
     g_sound_intent.pattern = SOUND_NONE;
     g_sound_intent.intensity = 0;
 
-
     /* base geometry */
     intent.eye_height_L = EYE_BASE_HEIGHT;
     intent.eye_height_R = EYE_BASE_HEIGHT;
@@ -49,6 +51,21 @@ void system_controller_update(uint32_t now_ms)
     ComfortFlags comfort = comfort_interpreter_get_flags();
     LightFlags light = light_interpreter_get_flags();
     EmotionState emo = emotion_interpreter_get_state();
+
+
+    if (emo.transient == TRANSIENT_MUSIC &&
+    last_transient != TRANSIENT_MUSIC)
+    {
+        laugh_until_ms = now_ms + 750;
+    }
+
+     if (emo.transient == TRANSIENT_STARTLED &&
+    last_transient != TRANSIENT_STARTLED)
+    {
+        scream_until_ms = now_ms + 500; 
+    }
+
+    last_transient = emo.transient;
 
 
     // Resolve emotions
@@ -63,27 +80,29 @@ void system_controller_update(uint32_t now_ms)
     intent.eye_height_R = EYE_BASE_HEIGHT + 20;
     intent.eye_width_L = EYE_BASE_HEIGHT - 20;
     intent.eye_width_R = EYE_BASE_HEIGHT - 20;
+
+    if (now_ms < scream_until_ms) {
     g_sound_intent.play = true;
     g_sound_intent.pattern = SOUND_BRIEF_REACT;
+}
     eyes_set_intent(&intent);
     return;   
 }
 
 if (emo.transient == TRANSIENT_MUSIC)
-
-
 {
     intent.base = EYES_BASE_AWAKE;
     intent.mood = EYES_MOOD_HAPPY;
     intent.override_mood = true;
 
+    if (now_ms < laugh_until_ms)
+{
     g_sound_intent.play = true;
     g_sound_intent.pattern = SOUND_LAUGH;
-
+}
     eyes_set_intent(&intent);
     return;
 }
-
 
 
 switch(emo.base) {

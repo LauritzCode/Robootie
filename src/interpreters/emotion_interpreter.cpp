@@ -28,7 +28,7 @@ void emotion_interpreter_handle_event(const Event *event)
 
         case EVENT_SOUND_BURST:
             current_emotion.transient = TRANSIENT_STARTLED;
-            transient_end_time = event->timestamp_ms + 1500;
+            transient_end_time = event->timestamp_ms + 3000;
             break;
 
         case EVENT_SOUND_MUSIC_DETECTED:
@@ -53,7 +53,7 @@ void emotion_interpreter_update(uint32_t now_ms)
     }
 
     if(current_comfort.overheated || current_comfort.chilled) {
-        Serial.println("Emotion detected: overheated");
+        Serial.println("Emotion detected: overheated or chilled");
         current_emotion.base = EMOTION_SAD;
     }  else
     {

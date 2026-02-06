@@ -115,6 +115,6 @@ static void generate_spook_pattern()
     for (uint8_t i = 0; i < pattern_length; i++)
     {
         pattern_buffer[i].frequency = random(1500, 2600);
-        pattern_buffer[i].duration_ms = random(80, 140);
+        pattern_buffer[i].duration_ms = random(10, 80);
     }
 }
