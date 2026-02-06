@@ -10,7 +10,9 @@
 #include "sensors/temp_sensor.h"
 #include "interpreters/light_interpreter.h"
 #include "interpreters/emotion_interpreter.h"
+#include "actuators/sound_intent.h"
 #include "actuators/buzzer.h"
+
 
 
 
@@ -42,8 +44,6 @@ void loop(void)
     buzzer_update(now);
     eyes_update(now);
     
-
-
     if (Serial.available())
 {
     char cmd = Serial.read();
@@ -57,5 +57,4 @@ void loop(void)
 
 
 
-    
 }
