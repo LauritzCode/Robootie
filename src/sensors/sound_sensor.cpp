@@ -21,12 +21,12 @@ static uint32_t last_burst_time = 0;
 
 void sound_sensor_init(void)
 {
-    pinMode(SOUND_PIN, INPUT);
+    pinMode(AUDIO_ANALOG_PIN, INPUT);
 }
 
 void sound_sensor_update(uint32_t now_ms)
 {
-    int raw = analogRead(SOUND_PIN);
+    int raw = analogRead(AUDIO_ANALOG_PIN);
     int delta = raw - BASELINE;
 
     if (delta < 0)
@@ -57,7 +57,7 @@ void sound_sensor_update(uint32_t now_ms)
             Event peak_event;
             peak_event.type = EVENT_SOUND_PEAK;
             peak_event.timestamp_ms = now_ms;
-            event_queue_push(&peak_event);
+            event_queue_push(peak_event);
 
             if (peak_max_value > BURST_THRESHOLD &&
                 now_ms - last_burst_time > BURST_COOLDOWN_MS)
@@ -65,7 +65,7 @@ void sound_sensor_update(uint32_t now_ms)
                 Event burst_event;
                 burst_event.type = EVENT_SOUND_BURST;
                 burst_event.timestamp_ms = now_ms;
-                event_queue_push(&burst_event);
+                event_queue_push(burst_event);
 
                 last_burst_time = now_ms;
             }
