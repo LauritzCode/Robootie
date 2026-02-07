@@ -11,6 +11,7 @@
 #include "sensors/sound_sensor.h"
 #include "interpreters/light_interpreter.h"
 #include "interpreters/emotion_interpreter.h"
+#include "interpreters/sound_interpreter.h"
 #include "actuators/sound_intent.h"
 #include "actuators/buzzer.h"
 
@@ -42,6 +43,7 @@ void loop(void)
     light_interpreter_update(now);
     system_controller_update(now);
     buzzer_apply_intent(system_controller_get_sound_intent());
+    sound_interpreter_update(now);
     buzzer_update(now);
     sound_sensor_update(now);
     eyes_update(now);

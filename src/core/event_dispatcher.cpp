@@ -5,6 +5,8 @@
 #include "interpreters/light_interpreter.h"
 #include "system/system_controller.h"
 #include "interpreters/emotion_interpreter.h"
+#include "interpreters/sound_interpreter.h"
+
 
 
 
@@ -19,5 +21,7 @@ void dispatch_events(void) {
         comfort_interpreter_handle_event(&event);
         light_interpreter_handle_event(&event);
         emotion_interpreter_handle_event(&event);
+        sound_interpreter_handle_event(&event);
+
     }
 }

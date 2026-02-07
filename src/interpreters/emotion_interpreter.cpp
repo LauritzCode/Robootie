@@ -60,12 +60,6 @@ void emotion_interpreter_update(uint32_t now_ms)
         current_emotion.base = EMOTION_NEUTRAL;
     }
 
-    if (current_emotion.transient == TRANSIENT_MUSIC &&
-    now_ms >= transient_end_time)
-{
-    current_emotion.transient = TRANSIENT_NONE;
-}
-
 }
 
 EmotionState emotion_interpreter_get_state(void)
