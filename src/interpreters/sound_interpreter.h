@@ -7,6 +7,7 @@ typedef struct
     bool talking;
     bool noise;
     bool quiet;
+    bool music;
 } SoundFlags;
 
 void sound_interpreter_init(void);

@@ -12,6 +12,7 @@
 #include "interpreters/emotion_interpreter.h"
 #include "actuators/sound_intent.h"
 #include "brain/behavior_context.h"
+#include "interpreters/sound_interpreter.h"
 
 
 static SoundIntent g_sound_intent;
@@ -21,6 +22,10 @@ static BehaviorContext current_context = CONTEXT_IDLE;
 static uint32_t laugh_until_ms = 0;
 static uint32_t scream_until_ms = 0;
 static TransientEmotion last_transient = TRANSIENT_NONE;
+
+static BehaviorContext last_context = CONTEXT_IDLE;
+static uint32_t annoyed_until_ms = 0;
+
 
 
 const SoundIntent* system_controller_get_sound_intent(void)
@@ -89,6 +94,17 @@ void system_controller_update(uint32_t now_ms)
     else
         current_context = CONTEXT_IDLE;
 
+        // --- Detect context transitions ---
+        
+    if (current_context == CONTEXT_ANNOYED &&
+        last_context != CONTEXT_ANNOYED)
+    {
+        annoyed_until_ms = now_ms + 600;
+    }
+
+    last_context = current_context;
+
+
     // --------------------------
     // Base emotional rendering
     // --------------------------
@@ -109,7 +125,7 @@ void system_controller_update(uint32_t now_ms)
     }
     else if (behavior == BEHAVIOR_ASLEEP)
     {
-        if (light.semi_bright)
+        if (light.semi_bright || current_context == CONTEXT_LISTENING)
             intent.base = EYES_BASE_HALF_AWAKE;
         else
             intent.base = EYES_BASE_SLEEP;
@@ -158,7 +174,7 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     // Context overlays
     // --------------------------
-    if (current_context == CONTEXT_LISTENING)
+    if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
     {
         intent.override_mood = true;
         intent.mood = EYES_MOOD_HAPPY;
@@ -172,16 +188,29 @@ void system_controller_update(uint32_t now_ms)
     {
         intent.override_mood = true;
         intent.mood = EYES_MOOD_ANGRY;
+        // Change later to annoyed sounds
+        if (now_ms < annoyed_until_ms)
+        {
+            g_sound_intent.play = true;
+            g_sound_intent.pattern = SOUND_BRIEF_REACT;
+        }
     }
 
     // --------------------------
     // Sleep escalation rule
     // --------------------------
-    if (behavior == BEHAVIOR_ASLEEP && !sound.quiet)
+    if (behavior == BEHAVIOR_ASLEEP && (sound.music || sound.noise))
     {
         intent.base = EYES_BASE_AWAKE;
         intent.override_mood = true;
         intent.mood = EYES_MOOD_ANGRY;
+
+        // Change later to annoyed sounds
+        if (now_ms < scream_until_ms)
+        {
+            g_sound_intent.play = true;
+            g_sound_intent.pattern = SOUND_BRIEF_REACT;
+        }
     }
 
     // --------------------------

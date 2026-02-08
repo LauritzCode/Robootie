@@ -14,7 +14,7 @@ void simulation_init(void)
 
 void simulation_push_event(EventType type, uint32_t now_ms)
 {
-    Event e = {0};
+    Event e = {};
     e.type = type;
     e.timestamp_ms = now_ms;
 

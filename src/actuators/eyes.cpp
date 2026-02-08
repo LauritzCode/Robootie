@@ -82,6 +82,9 @@ void eyes_update(uint32_t now_ms) {
             break;
             case EYES_MOOD_HAPPY:
             roboEyes.setMood(HAPPY);
+            break;
+            case EYES_MOOD_ANGRY: 
+            roboEyes.setMood(ANGRY);
         }
     }
     
