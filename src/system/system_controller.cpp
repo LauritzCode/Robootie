@@ -181,13 +181,20 @@ void system_controller_handle_event(const Event *event)
             break;  
             
         case EVENT_SOUND_PEAK:
-            Serial.println("PEAK");
+           // Serial.println("PEAK");
             break;
 
         case EVENT_SOUND_BURST:
             Serial.println("BURST");
             break;
 
+        case EVENT_SOUND_GENERAL_NOISE:
+            Serial.println("NOISY!!");
+            break;
+
+        case EVENT_SOUND_TALKING:
+            Serial.println("Is talking?");
+            break;
 
         default:
             break;
