@@ -12,6 +12,7 @@
 #include "interpreters/emotion_interpreter.h"
 #include "actuators/sound_intent.h"
 #include "brain/behavior_context.h"
+#include "core/timebase.h"
 #include "interpreters/sound_interpreter.h"
 
 
@@ -19,12 +20,15 @@ static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
 static BehaviorContext current_context = CONTEXT_IDLE;
 
-static uint32_t laugh_until_ms = 0;
-static uint32_t scream_until_ms = 0;
+static ActionTimer scream_timer, laugh_timer;
 static TransientEmotion last_transient = TRANSIENT_NONE;
 
 static BehaviorContext last_context = CONTEXT_IDLE;
 static uint32_t annoyed_until_ms = 0;
+static ActionTimer conversation_timer;
+static ActionTimer shy_timer;
+static bool quiet_prev = false;
+
 
 
 
@@ -73,13 +77,13 @@ void system_controller_update(uint32_t now_ms)
     if (emo.transient == TRANSIENT_MUSIC &&
         last_transient != TRANSIENT_MUSIC)
     {
-        laugh_until_ms = now_ms + 750;
+        timer_start(&laugh_timer, now_ms, 750);
     }
 
     if (emo.transient == TRANSIENT_STARTLED &&
         last_transient != TRANSIENT_STARTLED)
     {
-        scream_until_ms = now_ms + 500;
+        timer_start(&scream_timer, now_ms, 500);
     }
 
     last_transient = emo.transient;
@@ -103,6 +107,18 @@ void system_controller_update(uint32_t now_ms)
     }
 
     last_context = current_context;
+
+    if(transition_true(sound.quiet, &quiet_prev)) {
+        if(current_context == CONTEXT_LISTENING) {
+            if(chance_percent(50)) {
+                timer_start(&conversation_timer, now_ms, 1500);
+                current_context = CONTEXT_CONVERSING;
+            } else {
+                timer_start(&shy_timer, now_ms, 1200);
+                current_context = CONTEXT_SHY;
+            }
+        }
+    }
 
 
     // --------------------------
@@ -151,7 +167,7 @@ void system_controller_update(uint32_t now_ms)
         intent.eye_width_L = EYE_BASE_HEIGHT - 20;
         intent.eye_width_R = EYE_BASE_HEIGHT - 20;
 
-        if (now_ms < scream_until_ms)
+        if (timer_active(&scream_timer, now_ms))
         {
             g_sound_intent.play = true;
             g_sound_intent.pattern = SOUND_BRIEF_REACT;
@@ -164,12 +180,23 @@ void system_controller_update(uint32_t now_ms)
         intent.override_mood = true;
         intent.mood = EYES_MOOD_HAPPY;
 
-        if (now_ms < laugh_until_ms)
+        if (timer_active(&laugh_timer, now_ms))
         {
             g_sound_intent.play = true;
             g_sound_intent.pattern = SOUND_LAUGH;
         }
     }
+
+    // Conversation timers override context
+    if (timer_active(&conversation_timer, now_ms))
+    {
+        current_context = CONTEXT_CONVERSING;
+    }
+    else if (timer_active(&shy_timer, now_ms))
+    {
+        current_context = CONTEXT_SHY;
+    }
+
 
     // --------------------------
     // Context overlays
@@ -196,6 +223,36 @@ void system_controller_update(uint32_t now_ms)
         }
     }
 
+        if (current_context == CONTEXT_CONVERSING)
+    {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_HAPPY;
+
+        // Talking animation tweak
+        intent.override_eye_height = true;
+        intent.eye_height_L -= 10;
+        intent.eye_height_R -= 10;
+
+        if (!timer_active(&conversation_timer, now_ms))
+            timer_stop(&conversation_timer);
+
+        // Optional temporary talking sound
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_LAUGH;
+    }
+
+    if (current_context == CONTEXT_SHY)
+    {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_SAD;
+
+        intent.override_eye_height = true;
+        intent.eye_height_L -= 20;
+        intent.eye_height_R -= 20;
+    }
+
+
+
     // --------------------------
     // Sleep escalation rule
     // --------------------------
@@ -206,7 +263,7 @@ void system_controller_update(uint32_t now_ms)
         intent.mood = EYES_MOOD_ANGRY;
 
         // Change later to annoyed sounds
-        if (now_ms < scream_until_ms)
+        if (timer_active(&scream_timer, now_ms))
         {
             g_sound_intent.play = true;
             g_sound_intent.pattern = SOUND_BRIEF_REACT;
