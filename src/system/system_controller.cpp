@@ -19,15 +19,19 @@
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
 static BehaviorContext current_context = CONTEXT_IDLE;
+static BehaviorContext prev_context = CONTEXT_IDLE;
 
 static ActionTimer scream_timer, laugh_timer;
 static TransientEmotion last_transient = TRANSIENT_NONE;
 
 static BehaviorContext last_context = CONTEXT_IDLE;
-static uint32_t annoyed_until_ms = 0;
 static ActionTimer conversation_timer;
 static ActionTimer shy_timer;
+static ActionTimer listening_timer;
+static ActionTimer annoyed_timer;
 static bool quiet_prev = false;
+static bool conversation_sound_played = false;
+
 
 
 
@@ -93,9 +97,12 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
-    else if (sound.talking)
+    else if (sound.talking) {
         current_context = CONTEXT_LISTENING;
-    else
+        timer_start(&listening_timer, now_ms, 2500);
+    } else if (timer_active(&listening_timer, now_ms)) {
+        current_context = CONTEXT_LISTENING;
+    } else
         current_context = CONTEXT_IDLE;
 
         // --- Detect context transitions ---
@@ -103,16 +110,17 @@ void system_controller_update(uint32_t now_ms)
     if (current_context == CONTEXT_ANNOYED &&
         last_context != CONTEXT_ANNOYED)
     {
-        annoyed_until_ms = now_ms + 600;
+        timer_start(&annoyed_timer, now_ms, 600);
     }
 
     last_context = current_context;
 
     if(transition_true(sound.quiet, &quiet_prev)) {
-        if(current_context == CONTEXT_LISTENING) {
+        if(prev_context == CONTEXT_LISTENING) {
             if(chance_percent(50)) {
-                timer_start(&conversation_timer, now_ms, 1500);
+                timer_start(&conversation_timer, now_ms, 3000);
                 current_context = CONTEXT_CONVERSING;
+                conversation_sound_played = false;
             } else {
                 timer_start(&shy_timer, now_ms, 1200);
                 current_context = CONTEXT_SHY;
@@ -197,6 +205,11 @@ void system_controller_update(uint32_t now_ms)
         current_context = CONTEXT_SHY;
     }
 
+    if (!timer_active(&conversation_timer, now_ms))
+    {
+        conversation_sound_played = false;
+    }
+
 
     // --------------------------
     // Context overlays
@@ -216,7 +229,7 @@ void system_controller_update(uint32_t now_ms)
         intent.override_mood = true;
         intent.mood = EYES_MOOD_ANGRY;
         // Change later to annoyed sounds
-        if (now_ms < annoyed_until_ms)
+        if (timer_active(&annoyed_timer, now_ms))
         {
             g_sound_intent.play = true;
             g_sound_intent.pattern = SOUND_BRIEF_REACT;
@@ -237,9 +250,17 @@ void system_controller_update(uint32_t now_ms)
             timer_stop(&conversation_timer);
 
         // Optional temporary talking sound
-        g_sound_intent.play = true;
-        g_sound_intent.pattern = SOUND_LAUGH;
+
+        if (!conversation_sound_played)
+        {
+            g_sound_intent.play = true;
+            g_sound_intent.pattern = SOUND_LAUGH;
+            conversation_sound_played = true;
+        }
+     
     }
+
+
 
     if (current_context == CONTEXT_SHY)
     {
@@ -285,6 +306,7 @@ void system_controller_update(uint32_t now_ms)
     }
     
     eyes_set_intent(&intent);
+    prev_context = current_context;
 }
 
 
