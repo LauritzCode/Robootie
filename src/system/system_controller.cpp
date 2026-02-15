@@ -29,6 +29,7 @@ static ActionTimer conversation_timer;
 static ActionTimer shy_timer;
 static ActionTimer listening_timer;
 static ActionTimer annoyed_timer;
+static ActionTimer conversation_cooldown_timer;
 static bool quiet_prev = false;
 static bool conversation_sound_played = false;
 
@@ -116,17 +117,30 @@ void system_controller_update(uint32_t now_ms)
     last_context = current_context;
 
     if(transition_true(sound.quiet, &quiet_prev)) {
-        if(prev_context == CONTEXT_LISTENING) {
-            if(chance_percent(50)) {
-                timer_start(&conversation_timer, now_ms, 3000);
-                current_context = CONTEXT_CONVERSING;
-                conversation_sound_played = false;
-            } else {
-                timer_start(&shy_timer, now_ms, 1200);
-                current_context = CONTEXT_SHY;
-            }
+
+    
+    if (timer_active(&conversation_cooldown_timer, now_ms))
+        return;
+
+    if(prev_context == CONTEXT_LISTENING) {
+
+        if(chance_percent(85)) {
+
+            timer_start(&conversation_timer, now_ms, 2000);
+            current_context = CONTEXT_CONVERSING;
+            conversation_sound_played = false;
+
+        } else {
+
+            timer_start(&shy_timer, now_ms, 1200);
+            current_context = CONTEXT_SHY;
         }
+
+        // Start cooldown
+        timer_start(&conversation_cooldown_timer, now_ms, 3000);
     }
+}
+
 
 
     // --------------------------
