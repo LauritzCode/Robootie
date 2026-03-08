@@ -6,14 +6,14 @@
 static const uint32_t PEAK_WINDOW_MS = 1500;
 static const uint32_t QUIET_WINDOW_MS = 2500;
 
-static const uint8_t TALKING_PEAK_COUNT = 8;
-static const uint8_t NOISE_PEAK_COUNT = 10;
+static const uint8_t TALKING_PEAK_COUNT = 4;
+static const uint8_t NOISE_PEAK_COUNT = 20;
 
 
 static SoundFlags flags;
 
 
-static uint32_t peak_times[12];
+static uint32_t peak_times[20];
 static uint8_t peak_count = 0;
 
 static uint32_t last_peak_time = 0;

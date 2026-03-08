@@ -20,3 +20,4 @@ void mouth_clear();
 
 void mouth_handle_event(const Event *event);
 
+SpeechFlags speech_get_flags(void);

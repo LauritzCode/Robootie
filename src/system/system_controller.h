@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "core/event.h"
+#include "brain/behavior_context.h"
 
 typedef enum {
     COMFORT_COLD = 0,
@@ -19,3 +20,5 @@ typedef enum {
 void system_controller_init(void);
 void system_controller_update(uint32_t now_ms);
 void system_controller_handle_event(const Event *event);
+
+BehaviorContext system_controller_get_context(void);

@@ -37,7 +37,9 @@ static bool conversation_sound_played = false;
 
 
 
-
+BehaviorContext system_controller_get_context(void) {
+    return current_context;
+}
 
 const SoundIntent* system_controller_get_sound_intent(void)
 {
