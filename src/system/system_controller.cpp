@@ -13,6 +13,7 @@
 #include "actuators/sound_intent.h"
 #include "brain/behavior_context.h"
 #include "core/timebase.h"
+#include "actuators/mouth.h"
 #include "interpreters/sound_interpreter.h"
 
 
@@ -25,6 +26,7 @@ static ActionTimer scream_timer, laugh_timer;
 static TransientEmotion last_transient = TRANSIENT_NONE;
 
 static BehaviorContext last_context = CONTEXT_IDLE;
+static SpeechFlags speech_state;
 static ActionTimer conversation_timer;
 static ActionTimer shy_timer;
 static ActionTimer listening_timer;
@@ -67,6 +69,8 @@ void system_controller_update(uint32_t now_ms)
     intent.eye_width_L  = EYE_BASE_WIDTH;
     intent.eye_width_R  = EYE_BASE_WIDTH;
 
+    speech_state.quiet = true;
+
     // --------------------------
     // Gather state inputs
     // --------------------------
@@ -100,11 +104,14 @@ void system_controller_update(uint32_t now_ms)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
         current_context = CONTEXT_LISTENING;
+        speech_state.quiet = true;
         timer_start(&listening_timer, now_ms, 2500);
     } else if (timer_active(&listening_timer, now_ms)) {
         current_context = CONTEXT_LISTENING;
-    } else
+    } else {
         current_context = CONTEXT_IDLE;
+        speech_state.quiet = true;
+    }
 
         // --- Detect context transitions ---
         
@@ -128,12 +135,14 @@ void system_controller_update(uint32_t now_ms)
 
             timer_start(&conversation_timer, now_ms, 2000);
             current_context = CONTEXT_CONVERSING;
+            speech_state.response = true;
             conversation_sound_played = false;
 
         } else {
 
             timer_start(&shy_timer, now_ms, 1200);
             current_context = CONTEXT_SHY;
+            speech_state.shy_response = true;
         }
 
         // Start cooldown

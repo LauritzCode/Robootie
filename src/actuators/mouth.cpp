@@ -19,6 +19,7 @@
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
+SpeechFlags flags;
 
 
 typedef enum {
@@ -56,6 +57,7 @@ static void lcd_print2(const char *line1, const char *line2) {
 }
 
 static void render(MouthDisplay d) {
+
     uint8_t i;  // declared once, used in any case
     switch (d) {
         case MOUTH_IDLE:
@@ -182,4 +184,9 @@ void mouth_handle_event(const Event *event) {
     // render immediately so there's no one-loop delay
     g_current = MOUTH_IDLE;  // force set_display to re-render
     set_display(g_transient);
+}
+
+SpeechFlags speech_get_flags(void)
+{
+    return flags;
 }
