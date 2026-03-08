@@ -14,6 +14,7 @@
 #include "interpreters/sound_interpreter.h"
 #include "actuators/sound_intent.h"
 #include "actuators/buzzer.h"
+#include "actuators/mouth.h"
 
 
 
@@ -30,6 +31,7 @@ void setup(void)
     light_interpreter_init();
     comfort_interpreter_init();
     eyes_init();
+    mouth_init();
 }
 
 void loop(void)
@@ -47,6 +49,7 @@ void loop(void)
     buzzer_update(now);
     sound_sensor_update(now);
     eyes_update(now);
+    mouth_update(now);
     
     if (Serial.available())
 {
@@ -57,6 +60,7 @@ void loop(void)
 
     if (cmd == 'm')
         simulation_push_event(EVENT_SOUND_MUSIC_DETECTED, now);
+     
 }
 
 
