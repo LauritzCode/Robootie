@@ -14,6 +14,7 @@
 #include "interpreters/emotion_interpreter.h"
 #include "actuators/sound_intent.h"
 #include "brain/behavior_context.h"
+#include "brain/data.h"
 #include "interpreters/sound_interpreter.h"
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -55,20 +56,58 @@ static void lcd_print2(const char *line1, const char *line2) {
 }
 
 static void render(MouthDisplay d) {
+    uint8_t i;  // declared once, used in any case
     switch (d) {
-        case MOUTH_IDLE:           lcd.clear();                              break;
-        case MOUTH_SOUND_BURST:    lcd_print2("AH!!",             "");       break;
-        case MOUTH_TEMP_EXIT_HOT:  lcd_print2("Phew...not so",   "hot");     break;
-        case MOUTH_TEMP_ENTER_COMFY: lcd_print2("is comfy",       "");       break;
-        case MOUTH_TEMP_EXIT_COLD: lcd_print2("Mmmm warm",       "again!");  break;
-        case MOUTH_OVERHEATED:     lcd_print2("Please...make",   "cold :("); break;
-        case MOUTH_CHILLED:        lcd_print2("Please...make",   "warm :("); break;
-        case MOUTH_HOT:            lcd_print2("Is hot :(",        "");       break;
-        case MOUTH_COLD:           lcd_print2("Is cold :(",       "");       break;
-        case MOUTH_TALKING:        lcd_print2("Oh?",              "");       break;
-        case MOUTH_NOISE:          lcd_print2("Noisy!!",          "");       break;
-        case MOUTH_MUSIC:          lcd_print2("Oh? Is music?",    "");       break;
-        default:                   lcd.clear();                              break;
+        case MOUTH_IDLE:
+            lcd.clear();
+            break;
+        case MOUTH_SOUND_BURST:
+            i = random_index(BURST_EXPR_COUNT);
+            lcd_print2(burst_expressions[i].line1, burst_expressions[i].line2);
+            break;
+        case MOUTH_TEMP_EXIT_HOT:
+            i = random_index(EXIT_HOT_EXPR_COUNT);
+            lcd_print2(exit_hot_expressions[i].line1, exit_hot_expressions[i].line2);
+            break;
+        case MOUTH_TEMP_ENTER_COMFY:
+            i = random_index(ENTER_COMFY_EXPR_COUNT);
+            lcd_print2(enter_comfy_expressions[i].line1, enter_comfy_expressions[i].line2);
+            break;
+        case MOUTH_TEMP_EXIT_COLD:
+            i = random_index(EXIT_COLD_EXPR_COUNT);
+            lcd_print2(exit_cold_expressions[i].line1, exit_cold_expressions[i].line2);
+            break;
+        case MOUTH_OVERHEATED:
+            i = random_index(OVERHEATED_EXPR_COUNT);
+            lcd_print2(overheated_expressions[i].line1, overheated_expressions[i].line2);
+            break;
+        case MOUTH_CHILLED:
+            i = random_index(CHILLED_EXPR_COUNT);
+            lcd_print2(chilled_expressions[i].line1, chilled_expressions[i].line2);
+            break;
+        case MOUTH_HOT:
+            i = random_index(HOT_EXPR_COUNT);
+            lcd_print2(hot_expressions[i].line1, hot_expressions[i].line2);
+            break;
+        case MOUTH_COLD:
+            i = random_index(COLD_EXPR_COUNT);
+            lcd_print2(cold_expressions[i].line1, cold_expressions[i].line2);
+            break;
+        case MOUTH_TALKING:
+            i = random_index(TALKING_EXPR_COUNT);
+            lcd_print2(talking_expressions[i].line1, talking_expressions[i].line2);
+            break;
+        case MOUTH_NOISE:
+            i = random_index(NOISE_EXPR_COUNT);
+            lcd_print2(noise_expressions[i].line1, noise_expressions[i].line2);
+            break;
+        case MOUTH_MUSIC:
+            i = random_index(MUSIC_EXPR_COUNT);
+            lcd_print2(music_expressions[i].line1, music_expressions[i].line2);
+            break;
+        default:
+            lcd.clear();
+            break;
     }
 }
 
@@ -129,10 +168,11 @@ void mouth_handle_event(const Event *event) {
     MouthDisplay next_transient = MOUTH_IDLE;
 
     switch (event->type) {
-        case EVENT_TEMP_EXIT_HOT:    next_transient = MOUTH_TEMP_EXIT_HOT;   break;
-        case EVENT_TEMP_ENTER_COMFY: next_transient = MOUTH_TEMP_ENTER_COMFY; break;
-        case EVENT_TEMP_EXIT_COLD:   next_transient = MOUTH_TEMP_EXIT_COLD;  break;
-        case EVENT_SOUND_BURST:      next_transient = MOUTH_SOUND_BURST;     break;
+        case EVENT_TEMP_EXIT_HOT:         next_transient = MOUTH_TEMP_EXIT_HOT;   break;
+        case EVENT_TEMP_ENTER_COMFY:      next_transient = MOUTH_TEMP_ENTER_COMFY; break;
+        case EVENT_TEMP_EXIT_COLD:        next_transient = MOUTH_TEMP_EXIT_COLD;  break;
+        case EVENT_SOUND_BURST:           next_transient = MOUTH_SOUND_BURST;     break;
+        case EVENT_SOUND_GENERAL_NOISE:   next_transient = MOUTH_NOISE;           break;
         default: return;
     }
 
