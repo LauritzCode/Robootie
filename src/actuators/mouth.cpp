@@ -19,7 +19,6 @@
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-SpeechFlags flags;
 
 
 typedef enum {
@@ -39,6 +38,7 @@ typedef enum {
     MOUTH_TALKING,
     MOUTH_NOISE,
     MOUTH_MUSIC,
+    MOUTH_SLEEPY_ANNOYED,
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -107,6 +107,10 @@ static void render(MouthDisplay d) {
             i = random_index(MUSIC_EXPR_COUNT);
             lcd_print2(music_expressions[i].line1, music_expressions[i].line2);
             break;
+     /*   case MOUTH_SLEEPY_ANNOYED:
+            i = random_index(SLEEPY_ANNOYED_EXPR_COUNT);
+            lcd_print2(sleepy_annoyed_expressions[i].line1, sleepy_annoyed_expressions[i].line2);
+            break; */
         default:
             lcd.clear();
             break;
@@ -129,6 +133,7 @@ void mouth_clear() {
     lcd.clear();
 }
 
+
 void mouth_update(uint32_t now_ms) {
 
     // 1. expire transient if its timer has run out
@@ -136,31 +141,49 @@ void mouth_update(uint32_t now_ms) {
         g_transient = MOUTH_IDLE;
     }
 
-    // 2. resolve what should be showing right now
-    //    priority order (highest first):
-    //      transient > comfort flags > sound flags > idle
-
+    // 2. get current context
+    BehaviorContext ctx = system_controller_get_context();
+    BehaviorState carc = behavior_fsm_get_state();
+    // 3. resolve what should be showing
     MouthDisplay desired = MOUTH_IDLE;
 
     if (g_transient != MOUTH_IDLE) {
+        // transient always wins
         desired = g_transient;
+
+    } else if (ctx == CONTEXT_CONVERSING) {
+        if(carc == BEHAVIOR_ASLEEP) {
+            desired = MOUTH_SLEEPY_ANNOYED;
+        } else {
+            desired = MOUTH_TALKING;
+        }
+        // robot waited for quiet, now responds
+        
+
+    } else if (ctx == CONTEXT_ANNOYED) {
+        // noise reaction driven by context, not raw flag
+        desired = MOUTH_NOISE;
+
     } else {
-        // comfort flags
+        // comfort flags (highest sustained priority)
         ComfortFlags comfort = comfort_interpreter_get_flags();
         if      (comfort.overheated) desired = MOUTH_OVERHEATED;
         else if (comfort.chilled)    desired = MOUTH_CHILLED;
         else if (comfort.hot)        desired = MOUTH_HOT;
         else if (comfort.cold)       desired = MOUTH_COLD;
 
-        SoundFlags sound = sound_interpreter_get_flags();
-        if      (sound.talking) desired = MOUTH_TALKING;
-        else if (sound.noise)   desired = MOUTH_NOISE;
-        else if (sound.music)   desired = MOUTH_MUSIC;
+        // sound flags (only music remains here, 
+        // talking and noise are handled by context above)
+        else {
+            SoundFlags sound = sound_interpreter_get_flags();
+            if (sound.music) desired = MOUTH_MUSIC;
+        }
     }
 
-    // 3. apply — clears automatically when state changes to MOUTH_IDLE
+    // 4. apply — clears automatically when state changes to MOUTH_IDLE
     set_display(desired);
 }
+
 
 void mouth_handle_event(const Event *event) {
     // Events trigger transient messages that override everything for a fixed time.
@@ -186,7 +209,3 @@ void mouth_handle_event(const Event *event) {
     set_display(g_transient);
 }
 
-SpeechFlags speech_get_flags(void)
-{
-    return flags;
-}
