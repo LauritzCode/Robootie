@@ -51,66 +51,60 @@ static ActionTimer  g_transient_timer;
 static void lcd_print2(const char *line1, const char *line2) {
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(line1);
+    lcd.print((__FlashStringHelper*)line1);
     lcd.setCursor(0, 1);
-    lcd.print(line2);
+    lcd.print((__FlashStringHelper*)line2);
 }
 
-static void render(MouthDisplay d) {
+static void render_expr(const LcdExpr *arr, uint8_t count) {
+    uint8_t i = random_index(count);
+    const char* l1 = (const char*)pgm_read_ptr(&arr[i].line1);
+    const char* l2 = (const char*)pgm_read_ptr(&arr[i].line2);
+    lcd_print2(l1, l2);
+}
 
-    uint8_t i;  // declared once, used in any case
+
+static void render(MouthDisplay d) {
     switch (d) {
         case MOUTH_IDLE:
             lcd.clear();
             break;
         case MOUTH_SOUND_BURST:
-            i = random_index(BURST_EXPR_COUNT);
-            lcd_print2(burst_expressions[i].line1, burst_expressions[i].line2);
+            render_expr(burst_expressions, BURST_EXPR_COUNT);
             break;
         case MOUTH_TEMP_EXIT_HOT:
-            i = random_index(EXIT_HOT_EXPR_COUNT);
-            lcd_print2(exit_hot_expressions[i].line1, exit_hot_expressions[i].line2);
+            render_expr(exit_hot_expressions, EXIT_HOT_EXPR_COUNT);
             break;
         case MOUTH_TEMP_ENTER_COMFY:
-            i = random_index(ENTER_COMFY_EXPR_COUNT);
-            lcd_print2(enter_comfy_expressions[i].line1, enter_comfy_expressions[i].line2);
+            render_expr(enter_comfy_expressions, ENTER_COMFY_EXPR_COUNT);
             break;
         case MOUTH_TEMP_EXIT_COLD:
-            i = random_index(EXIT_COLD_EXPR_COUNT);
-            lcd_print2(exit_cold_expressions[i].line1, exit_cold_expressions[i].line2);
+            render_expr(exit_cold_expressions, EXIT_COLD_EXPR_COUNT);
             break;
         case MOUTH_OVERHEATED:
-            i = random_index(OVERHEATED_EXPR_COUNT);
-            lcd_print2(overheated_expressions[i].line1, overheated_expressions[i].line2);
+            render_expr(overheated_expressions, OVERHEATED_EXPR_COUNT);
             break;
         case MOUTH_CHILLED:
-            i = random_index(CHILLED_EXPR_COUNT);
-            lcd_print2(chilled_expressions[i].line1, chilled_expressions[i].line2);
+            render_expr(chilled_expressions, CHILLED_EXPR_COUNT);
             break;
         case MOUTH_HOT:
-            i = random_index(HOT_EXPR_COUNT);
-            lcd_print2(hot_expressions[i].line1, hot_expressions[i].line2);
+            render_expr(hot_expressions, HOT_EXPR_COUNT);
             break;
         case MOUTH_COLD:
-            i = random_index(COLD_EXPR_COUNT);
-            lcd_print2(cold_expressions[i].line1, cold_expressions[i].line2);
+            render_expr(cold_expressions, COLD_EXPR_COUNT);
             break;
         case MOUTH_TALKING:
-            i = random_index(TALKING_EXPR_COUNT);
-            lcd_print2(talking_expressions[i].line1, talking_expressions[i].line2);
+            render_expr(talking_expressions, TALKING_EXPR_COUNT);
             break;
         case MOUTH_NOISE:
-            i = random_index(NOISE_EXPR_COUNT);
-            lcd_print2(noise_expressions[i].line1, noise_expressions[i].line2);
+            render_expr(noise_expressions, NOISE_EXPR_COUNT);
             break;
         case MOUTH_MUSIC:
-            i = random_index(MUSIC_EXPR_COUNT);
-            lcd_print2(music_expressions[i].line1, music_expressions[i].line2);
+            render_expr(music_expressions, MUSIC_EXPR_COUNT);
             break;
-     /*   case MOUTH_SLEEPY_ANNOYED:
-            i = random_index(SLEEPY_ANNOYED_EXPR_COUNT);
-            lcd_print2(sleepy_annoyed_expressions[i].line1, sleepy_annoyed_expressions[i].line2);
-            break; */
+        case MOUTH_SLEEPY_ANNOYED:
+            render_expr(sleepy_annoyed_expressions, SLEEPY_ANNOYED_EXPR_COUNT);
+            break;
         default:
             lcd.clear();
             break;
