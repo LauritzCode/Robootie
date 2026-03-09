@@ -130,6 +130,28 @@ void mouth_clear() {
 
 void mouth_update(uint32_t now_ms) {
 
+   static bool boot_shown = false;
+    static bool boot_cleared = false;
+
+    if (now_ms < 8000) {
+        if (!boot_shown) {
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Hello!");
+            lcd.setCursor(0, 1);
+            lcd.print("I'm Robootie!");
+            boot_shown = true;
+        }
+        return;
+    }
+
+    // first frame after boot — clear and reset state
+    if (!boot_cleared) {
+        lcd.clear();
+        g_current = MOUTH_IDLE;
+        boot_cleared = true;
+    }
+
     // 1. expire transient if its timer has run out
     if (g_transient != MOUTH_IDLE && !timer_active(&g_transient_timer, now_ms)) {
         g_transient = MOUTH_IDLE;

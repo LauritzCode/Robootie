@@ -19,7 +19,7 @@ Default brightness is about 230-240. Point a light directly and it goes to 40 or
 // Temp related 
 
 #define TEMP_COLD_THRESHOLD 5
-#define TEMP_HOT_THRESHOLD 27
+#define TEMP_HOT_THRESHOLD 25
 
 #define HOT_GRACE_MS 5000
 #define HOT_CONFIRM_MS 10000

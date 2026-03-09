@@ -41,5 +41,6 @@ typedef struct
 {
     EventType type;
     uint32_t timestamp_ms;
+    uint16_t value;
 } Event;
 
