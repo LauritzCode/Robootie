@@ -16,6 +16,7 @@
 #include "actuators/buzzer.h"
 #include "actuators/mouth.h"
 #include "actuators/arms.h"
+#include "sensors/proximity_sensor.h"
 
 
 
@@ -34,6 +35,7 @@ void setup(void)
     eyes_init();
     mouth_init();
     arms_init();
+    proximity_init();
 }
 
 void loop(void)
@@ -53,6 +55,7 @@ void loop(void)
     eyes_update(now);
     mouth_update(now);
     arms_update(now);
+    proximity_update(now);
     
     if (Serial.available())
 {
