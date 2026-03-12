@@ -5,9 +5,9 @@
 #include "config/pins.h"
 
 // ── thresholds ────────────────────────────────────────────────────────────────
-static const int NOISE_THRESHOLD      = 10;
+static const int NOISE_THRESHOLD      = 14;
 static const int PEAK_THRESHOLD       = 25;
-static const int BURST_THRESHOLD      = 250;
+static const int BURST_THRESHOLD      = 285;
 
 static const uint32_t PEAK_MIN_DURATION_MS  = 20;
 static const uint32_t BURST_COOLDOWN_MS     = 600;

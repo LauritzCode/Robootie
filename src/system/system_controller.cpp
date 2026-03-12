@@ -110,7 +110,7 @@ void system_controller_update(uint32_t now_ms)
     // Determine behavior context
     // --------------------------
 
-    if (emo.transient != TRANSIENT_STARTLED || emo.base != EMOTION_ANGRY) {
+    if (emo.transient != TRANSIENT_STARTLED || emo.transient != EMOTION_ANGRY) {
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
@@ -187,7 +187,7 @@ void system_controller_update(uint32_t now_ms)
         if (light.semi_bright || current_context == CONTEXT_LISTENING)
             intent.base = EYES_BASE_HALF_AWAKE;
         else
-            intent.base = EYES_BASE_SLEEP;
+            intent.base = EYES_BASE_SLEEP; 
     }
     else
     {
@@ -251,8 +251,20 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     // Context overlays
     // --------------------------
-    if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
-    {
+    if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP) {
+
+        if(behavior == BEHAVIOR_ASLEEP) {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_ANGRY;
+
+        arms_intent.pose = ARMS_ATTACK;
+        arms_intent.one_shot = false;
+
+        intent.override_eye_height = true;
+        intent.eye_height_L += 6;
+        intent.eye_height_R += 6;
+        }
+         else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP) {
         intent.override_mood = true;
         intent.mood = EYES_MOOD_HAPPY;
 
@@ -262,6 +274,8 @@ void system_controller_update(uint32_t now_ms)
         intent.override_eye_height = true;
         intent.eye_height_L += 6;
         intent.eye_height_R += 6;
+        }
+
 
         
     }
