@@ -5,4 +5,5 @@
 #define PIN_BUZZER 3
 #define AUDIO_DIGITAL_PIN 5
 #define AUDIO_ANALOG_PIN 4
-
+#define LEFT_ARM 8
+#define RIGHT_ARM 9

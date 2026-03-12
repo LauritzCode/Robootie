@@ -33,7 +33,7 @@ void setup(void)
     comfort_interpreter_init();
     eyes_init();
     mouth_init();
-    armsTestInit();
+    arms_init();
 }
 
 void loop(void)
@@ -52,7 +52,7 @@ void loop(void)
     sound_sensor_update(now);
     eyes_update(now);
     mouth_update(now);
-    armsTest();
+    arms_update(now);
     
     if (Serial.available())
 {
