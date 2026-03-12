@@ -15,6 +15,7 @@
 #include "actuators/sound_intent.h"
 #include "actuators/buzzer.h"
 #include "actuators/mouth.h"
+#include "actuators/arms.h"
 
 
 
@@ -32,6 +33,7 @@ void setup(void)
     comfort_interpreter_init();
     eyes_init();
     mouth_init();
+    armsTestInit();
 }
 
 void loop(void)
@@ -50,6 +52,7 @@ void loop(void)
     sound_sensor_update(now);
     eyes_update(now);
     mouth_update(now);
+    armsTest();
     
     if (Serial.available())
 {
