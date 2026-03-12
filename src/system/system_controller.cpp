@@ -79,6 +79,8 @@ void system_controller_update(uint32_t now_ms)
 
     speech_state.quiet = true;
 
+    if (now_ms < 3000) return;
+
     // --------------------------
     // Gather state inputs
     // --------------------------
@@ -110,7 +112,7 @@ void system_controller_update(uint32_t now_ms)
     // Determine behavior context
     // --------------------------
 
-    if (emo.transient != TRANSIENT_STARTLED || emo.transient != EMOTION_ANGRY) {
+    if (emo.transient != TRANSIENT_STARTLED && emo.transient != EMOTION_ANGRY) {
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
@@ -251,34 +253,26 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     // Context overlays
     // --------------------------
-    if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP) {
-
-        if(behavior == BEHAVIOR_ASLEEP) {
-        intent.override_mood = true;
-        intent.mood = EYES_MOOD_ANGRY;
-
-        arms_intent.pose = ARMS_ATTACK;
-        arms_intent.one_shot = false;
-
-        intent.override_eye_height = true;
-        intent.eye_height_L += 6;
-        intent.eye_height_R += 6;
-        }
-         else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP) {
-        intent.override_mood = true;
-        intent.mood = EYES_MOOD_HAPPY;
-
-        arms_intent.pose = ARMS_WAVE;
-        arms_intent.one_shot = false;
-
-        intent.override_eye_height = true;
-        intent.eye_height_L += 6;
-        intent.eye_height_R += 6;
-        }
-
-
-        
-    }
+    if (current_context == CONTEXT_LISTENING && behavior == BEHAVIOR_ASLEEP)
+{
+   // intent.override_mood = true;
+   // intent.mood = EYES_MOOD_ANGRY;
+    //arms_intent.pose = ARMS_ATTACK;
+    // arms_intent.one_shot = false;
+    //intent.override_eye_height = true;
+    //intent.eye_height_L += 6;
+    // intent.eye_height_R += 6;
+}
+else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
+{
+    intent.override_mood = true;
+    intent.mood = EYES_MOOD_HAPPY;
+    arms_intent.pose = ARMS_WAVE;
+    arms_intent.one_shot = false;
+    intent.override_eye_height = true;
+    intent.eye_height_L += 6;
+    intent.eye_height_R += 6;
+}
 
     if (current_context == CONTEXT_ANNOYED)
     {
@@ -307,6 +301,12 @@ void system_controller_update(uint32_t now_ms)
 
         arms_intent.pose = ARMS_GOF_OUT;
         arms_intent.one_shot = false;
+
+        if (behavior == BEHAVIOR_ASLEEP) {
+        intent.mood = EYES_MOOD_ANGRY;  // ← angry when it actually responds
+    } else {
+        intent.mood = EYES_MOOD_HAPPY;
+    }
 
         if (!timer_active(&conversation_timer, now_ms))
             timer_stop(&conversation_timer);

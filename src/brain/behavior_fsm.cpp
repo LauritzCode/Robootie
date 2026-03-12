@@ -4,7 +4,7 @@
 static BehaviorState current_state;
 
 void behavior_fsm_init(void) {
-    current_state = BEHAVIOR_ASLEEP;
+    current_state = BEHAVIOR_AWAKE;
     Serial.println("FSM init: ASLEEP");
 }
 
