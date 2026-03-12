@@ -7,6 +7,7 @@ typedef enum
     CONTEXT_ANNOYED,
     CONTEXT_PLAYFUL,
     CONTEXT_CONVERSING,
-    CONTEXT_SHY
+    CONTEXT_SHY,
+    CONTEXT_SCARED
 } BehaviorContext;
 

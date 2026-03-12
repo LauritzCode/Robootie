@@ -7,6 +7,7 @@
 #include "interpreters/emotion_interpreter.h"
 #include "interpreters/sound_interpreter.h"
 #include "actuators/mouth.h"
+#include "actuators/arms.h"
 
 
 
@@ -23,6 +24,7 @@ void dispatch_events(void) {
         emotion_interpreter_handle_event(&event);
         sound_interpreter_handle_event(&event);
         mouth_handle_event(&event);
+        arms_handle_event(&event);
 
     }
 }

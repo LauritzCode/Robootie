@@ -9,6 +9,8 @@ typedef enum {
     ARMS_GOF_OUT, 
     ARMS_DANCE, 
     ARMS_ATTACK, 
+    ARMS_SHIVER,
+    ARMS_HOT,
 } ArmsPose;
 
 

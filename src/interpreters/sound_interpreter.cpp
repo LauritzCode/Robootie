@@ -10,7 +10,7 @@ static const uint32_t MIN_INTERVALS_NEEDED  = 6;     // need at least this many 
 
 static const uint8_t  TALKING_PEAK_MIN      = 3;     // min peaks in window to be talking
 static const uint8_t  TALKING_PEAK_MAX      = 14;    // above this it's noise territory
-static const uint8_t  NOISE_PEAK_COUNT      = 20;    // peaks in window to be noise
+static const uint8_t  NOISE_PEAK_COUNT      = 10;    // peaks in window to be noise
 
 // music regularity: inter-peak interval variance must be below this (ms squared)
 // lower = stricter, higher = more forgiving

@@ -14,6 +14,7 @@
 #include "brain/behavior_context.h"
 #include "core/timebase.h"
 #include "actuators/mouth.h"
+#include "actuators/arms.h"
 #include "interpreters/sound_interpreter.h"
 
 
@@ -55,6 +56,7 @@ void system_controller_init(void)
 void system_controller_update(uint32_t now_ms)
 {
     EyesIntent intent = {};
+    ArmsIntent arms_intent = {};
 
     // --------------------------
     // Reset sound intent
@@ -62,6 +64,10 @@ void system_controller_update(uint32_t now_ms)
     g_sound_intent.play = false;
     g_sound_intent.pattern = SOUND_NONE;
     g_sound_intent.intensity = 0;
+
+    // reset arms intent
+    arms_intent.pose = ARMS_IDLE;
+    arms_intent.one_shot = false;
 
     // --------------------------
     // Base geometry
@@ -93,6 +99,7 @@ void system_controller_update(uint32_t now_ms)
 
     if (emo.transient == TRANSIENT_STARTLED &&
         last_transient != TRANSIENT_STARTLED)
+        
     {
         timer_start(&scream_timer, now_ms, 500);
     }
@@ -102,6 +109,8 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     // Determine behavior context
     // --------------------------
+
+    if (emo.transient != TRANSIENT_STARTLED || emo.base != EMOTION_ANGRY) {
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
@@ -114,6 +123,7 @@ void system_controller_update(uint32_t now_ms)
         current_context = CONTEXT_IDLE;
         speech_state.quiet = true;
     }
+}
 
         // --- Detect context transitions ---
         
@@ -189,11 +199,13 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     if (emo.transient == TRANSIENT_STARTLED)
     {
+        current_context = CONTEXT_SCARED;
         intent.base = EYES_BASE_AWAKE;
         intent.override_mood = true;
         intent.mood = EYES_MOOD_SAD;
         intent.tremble = true;
-
+        arms_intent.pose = ARMS_GOF_OUT;
+        arms_intent.one_shot = false;
         intent.override_eye_height = true;
         intent.eye_height_L = EYE_BASE_HEIGHT + 20;
         intent.eye_height_R = EYE_BASE_HEIGHT + 20;
@@ -244,15 +256,23 @@ void system_controller_update(uint32_t now_ms)
         intent.override_mood = true;
         intent.mood = EYES_MOOD_HAPPY;
 
+        arms_intent.pose = ARMS_WAVE;
+        arms_intent.one_shot = false;
+
         intent.override_eye_height = true;
         intent.eye_height_L += 6;
         intent.eye_height_R += 6;
+
+        
     }
 
     if (current_context == CONTEXT_ANNOYED)
     {
         intent.override_mood = true;
         intent.mood = EYES_MOOD_ANGRY;
+        arms_intent.pose = ARMS_ATTACK;
+        arms_intent.one_shot = false;
+        
         // Change later to annoyed sounds
         if (timer_active(&annoyed_timer, now_ms))
         {
@@ -270,6 +290,9 @@ void system_controller_update(uint32_t now_ms)
         intent.override_eye_height = true;
         intent.eye_height_L -= 10;
         intent.eye_height_R -= 10;
+
+        arms_intent.pose = ARMS_GOF_OUT;
+        arms_intent.one_shot = false;
 
         if (!timer_active(&conversation_timer, now_ms))
             timer_stop(&conversation_timer);
@@ -295,6 +318,8 @@ void system_controller_update(uint32_t now_ms)
         intent.override_eye_height = true;
         intent.eye_height_L -= 20;
         intent.eye_height_R -= 20;
+        arms_intent.pose = ARMS_HOT;
+        arms_intent.one_shot = false;
     }
 
 
@@ -307,6 +332,8 @@ void system_controller_update(uint32_t now_ms)
         intent.base = EYES_BASE_AWAKE;
         intent.override_mood = true;
         intent.mood = EYES_MOOD_ANGRY;
+        arms_intent.pose = ARMS_ATTACK;
+        arms_intent.one_shot = false;
 
         // Change later to annoyed sounds
         if (timer_active(&scream_timer, now_ms))
@@ -319,8 +346,8 @@ void system_controller_update(uint32_t now_ms)
     // --------------------------
     // Physical modifiers
     // --------------------------
-    intent.sweat = comfort.hot || comfort.overheated;
-    intent.tremble = comfort.cold || comfort.chilled;
+    intent.sweat = comfort.hot || comfort.overheated || emo.transient == TRANSIENT_STARTLED;
+    intent.tremble = comfort.cold || comfort.chilled || emo.transient == TRANSIENT_STARTLED;
 
     if (light.too_bright)
     {
@@ -331,6 +358,7 @@ void system_controller_update(uint32_t now_ms)
     }
     
     eyes_set_intent(&intent);
+    arms_set_intent(&arms_intent);
     prev_context = current_context;
 }
 
