@@ -17,7 +17,7 @@
 #include "actuators/mouth.h"
 #include "actuators/arms.h"
 #include "sensors/proximity_sensor.h"
-
+#include "interpreters/proximity_interpreter.h"
 
 
 
@@ -32,6 +32,7 @@ void setup(void)
     temp_sensor_init();
     light_interpreter_init();
     comfort_interpreter_init();
+    proximity_interpreter_init();
     eyes_init();
     mouth_init();
     arms_init();

@@ -16,7 +16,7 @@
 #include "actuators/mouth.h"
 #include "actuators/arms.h"
 #include "interpreters/sound_interpreter.h"
-
+#include "interpreters/proximity_interpreter.h"
 
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
@@ -89,6 +89,7 @@ void system_controller_update(uint32_t now_ms)
     EmotionState emo = emotion_interpreter_get_state();
     SoundFlags sound = sound_interpreter_get_flags();
     BehaviorState behavior = behavior_fsm_get_state();
+    ProximityFlags proximity = proximity_interpreter_get_flags();
 
     // --------------------------
     // Update timers from transient edges

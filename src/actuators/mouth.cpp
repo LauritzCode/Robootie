@@ -39,6 +39,10 @@ typedef enum {
     MOUTH_NOISE,
     MOUTH_MUSIC,
     MOUTH_SLEEPY_ANNOYED,
+    MOUTH_GREETING,
+    MOUTH_PERSONAL_SPACE,
+    MOUTH_GOODBYE,
+    MOUTH_LINGERING,
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -105,6 +109,18 @@ static void render(MouthDisplay d) {
         case MOUTH_SLEEPY_ANNOYED:
             render_expr(sleepy_annoyed_expressions, SLEEPY_ANNOYED_EXPR_COUNT);
             break;
+        case MOUTH_GREETING:
+            render_expr(greeting_expressions, GREETING_EXPR_COUNT);
+        break;
+        case MOUTH_PERSONAL_SPACE:
+            render_expr(personal_space_expressions, GREETING_EXPR_COUNT);
+        break;
+        case MOUTH_GOODBYE:
+            render_expr(goodbye_expressions, GREETING_EXPR_COUNT);
+        break;
+        case MOUTH_LINGERING:
+            render_expr(lingering_expressions, GREETING_EXPR_COUNT);
+        break;
         default:
             lcd.clear();
             break;
