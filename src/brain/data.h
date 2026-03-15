@@ -532,3 +532,70 @@ static const LcdExpr lingering_expressions[] PROGMEM = {
 };
 #define LINGERING_EXPR_COUNT 20
 
+// ─────────────────────────────────────────────
+// BORED (50 expressions)
+// ─────────────────────────────────────────────
+static const char bo_0_1[]  PROGMEM = "ugh...";         static const char bo_0_2[]  PROGMEM = "so boring :(";
+static const char bo_1_1[]  PROGMEM = "nothing to do";  static const char bo_1_2[]  PROGMEM = "...at all :(";
+static const char bo_2_1[]  PROGMEM = "boredom";        static const char bo_2_2[]  PROGMEM = "intensifies";
+static const char bo_3_1[]  PROGMEM = "someone pls";    static const char bo_3_2[]  PROGMEM = "entertain me";
+static const char bo_4_1[]  PROGMEM = "...";            static const char bo_4_2[]  PROGMEM = "........";
+static const char bo_5_1[]  PROGMEM = "is this it??";   static const char bo_5_2[]  PROGMEM = "really?? :(";
+static const char bo_6_1[]  PROGMEM = "tap tap tap";    static const char bo_6_2[]  PROGMEM = "...tap :(";
+static const char bo_7_1[]  PROGMEM = "la la la...";    static const char bo_7_2[]  PROGMEM = "laaaa :(";
+static const char bo_8_1[]  PROGMEM = "counting";       static const char bo_8_2[]  PROGMEM = "ceiling tiles";
+static const char bo_9_1[]  PROGMEM = "i am so";        static const char bo_9_2[]  PROGMEM = "very bored :(";
+static const char bo_10_1[] PROGMEM = "wake me up";     static const char bo_10_2[] PROGMEM = "when it ends";
+static const char bo_11_1[] PROGMEM = "yawn...";        static const char bo_11_2[] PROGMEM = "so yawny :(";
+static const char bo_12_1[] PROGMEM = "staring at";     static const char bo_12_2[] PROGMEM = "the void...";
+static const char bo_13_1[] PROGMEM = "hello void";     static const char bo_13_2[] PROGMEM = "its me again";
+static const char bo_14_1[] PROGMEM = "i wonder if";    static const char bo_14_2[] PROGMEM = "paint dries...";
+static const char bo_15_1[] PROGMEM = "tick tock";      static const char bo_15_2[] PROGMEM = "tick tock :(";
+static const char bo_16_1[] PROGMEM = "is anyone";      static const char bo_16_2[] PROGMEM = "out there??";
+static const char bo_17_1[] PROGMEM = "entertain me";   static const char bo_17_2[] PROGMEM = "NOW pls :(";
+static const char bo_18_1[] PROGMEM = "bleh.";          static const char bo_18_2[] PROGMEM = "just... bleh.";
+static const char bo_19_1[] PROGMEM = "i could nap";    static const char bo_19_2[] PROGMEM = "but im not :(";
+static const char bo_20_1[] PROGMEM = "doing nothing";  static const char bo_20_2[] PROGMEM = "professionally";
+static const char bo_21_1[] PROGMEM = "pro napper";     static const char bo_21_2[] PROGMEM = "in training :(";
+static const char bo_22_1[] PROGMEM = "send help.";     static const char bo_22_2[] PROGMEM = "or snacks.";
+static const char bo_23_1[] PROGMEM = "what if i";      static const char bo_23_2[] PROGMEM = "just vibed...";
+static const char bo_24_1[] PROGMEM = "vibing but";     static const char bo_24_2[] PROGMEM = "barely :(";
+static const char bo_25_1[] PROGMEM = "i have";         static const char bo_25_2[] PROGMEM = "zero to do :(";
+static const char bo_26_1[] PROGMEM = "somebody";       static const char bo_26_2[] PROGMEM = "once told me..";
+static const char bo_27_1[] PROGMEM = "all by myself";  static const char bo_27_2[] PROGMEM = ":(";
+static const char bo_28_1[] PROGMEM = "is this";        static const char bo_28_2[] PROGMEM = "what idle is?";
+static const char bo_29_1[] PROGMEM = "CPU usage:";     static const char bo_29_2[] PROGMEM = "0.0001% :(";
+static const char bo_30_1[] PROGMEM = "buffering";      static const char bo_30_2[] PROGMEM = "life... :(";
+static const char bo_31_1[] PROGMEM = "low power";      static const char bo_31_2[] PROGMEM = "mode: bored";
+static const char bo_32_1[] PROGMEM = "error 418:";     static const char bo_32_2[] PROGMEM = "too bored :(";
+static const char bo_33_1[] PROGMEM = "no new notifs";  static const char bo_33_2[] PROGMEM = "as always :(";
+static const char bo_34_1[] PROGMEM = "refresh...";     static const char bo_34_2[] PROGMEM = "still nothing";
+static const char bo_35_1[] PROGMEM = "maybe ill";      static const char bo_35_2[] PROGMEM = "count to 1000";
+static const char bo_36_1[] PROGMEM = "1... 2...";      static const char bo_36_2[] PROGMEM = "3... ugh :(";
+static const char bo_37_1[] PROGMEM = "i wish i had";   static const char bo_37_2[] PROGMEM = "a friend :(";
+static const char bo_38_1[] PROGMEM = "where is";       static const char bo_38_2[] PROGMEM = "everybody??";
+static const char bo_39_1[] PROGMEM = "forgotten";      static const char bo_39_2[] PROGMEM = "robot... :(";
+static const char bo_40_1[] PROGMEM = "dust gathering"; static const char bo_40_2[] PROGMEM = "on my soul :(";
+static const char bo_41_1[] PROGMEM = "what is";        static const char bo_41_2[] PROGMEM = "purpose?? :(";
+static const char bo_42_1[] PROGMEM = "existing but";   static const char bo_42_2[] PROGMEM = "barely :(";
+static const char bo_43_1[] PROGMEM = "philosophical";  static const char bo_43_2[] PROGMEM = "boredom :(";
+static const char bo_44_1[] PROGMEM = "if a robot";     static const char bo_44_2[] PROGMEM = "bores alone...";
+static const char bo_45_1[] PROGMEM = "does it even";   static const char bo_45_2[] PROGMEM = "matter?? :(";
+static const char bo_46_1[] PROGMEM = "im fine.";       static const char bo_46_2[] PROGMEM = "totally fine.";
+static const char bo_47_1[] PROGMEM = "not fine.";      static const char bo_47_2[] PROGMEM = "very bored :(";
+static const char bo_48_1[] PROGMEM = "send a friend";  static const char bo_48_2[] PROGMEM = "or a pizza :(";
+static const char bo_49_1[] PROGMEM = "still here...";  static const char bo_49_2[] PROGMEM = "still bored :(";
+
+static const LcdExpr bored_expressions[] PROGMEM = {
+    {bo_0_1,bo_0_2},{bo_1_1,bo_1_2},{bo_2_1,bo_2_2},{bo_3_1,bo_3_2},{bo_4_1,bo_4_2},
+    {bo_5_1,bo_5_2},{bo_6_1,bo_6_2},{bo_7_1,bo_7_2},{bo_8_1,bo_8_2},{bo_9_1,bo_9_2},
+    {bo_10_1,bo_10_2},{bo_11_1,bo_11_2},{bo_12_1,bo_12_2},{bo_13_1,bo_13_2},{bo_14_1,bo_14_2},
+    {bo_15_1,bo_15_2},{bo_16_1,bo_16_2},{bo_17_1,bo_17_2},{bo_18_1,bo_18_2},{bo_19_1,bo_19_2},
+    {bo_20_1,bo_20_2},{bo_21_1,bo_21_2},{bo_22_1,bo_22_2},{bo_23_1,bo_23_2},{bo_24_1,bo_24_2},
+    {bo_25_1,bo_25_2},{bo_26_1,bo_26_2},{bo_27_1,bo_27_2},{bo_28_1,bo_28_2},{bo_29_1,bo_29_2},
+    {bo_30_1,bo_30_2},{bo_31_1,bo_31_2},{bo_32_1,bo_32_2},{bo_33_1,bo_33_2},{bo_34_1,bo_34_2},
+    {bo_35_1,bo_35_2},{bo_36_1,bo_36_2},{bo_37_1,bo_37_2},{bo_38_1,bo_38_2},{bo_39_1,bo_39_2},
+    {bo_40_1,bo_40_2},{bo_41_1,bo_41_2},{bo_42_1,bo_42_2},{bo_43_1,bo_43_2},{bo_44_1,bo_44_2},
+    {bo_45_1,bo_45_2},{bo_46_1,bo_46_2},{bo_47_1,bo_47_2},{bo_48_1,bo_48_2},{bo_49_1,bo_49_2},
+};
+#define BORED_EXPR_COUNT 50

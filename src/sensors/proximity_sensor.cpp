@@ -11,6 +11,7 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
 static ProximityState proximity_state = PROXIMITY_FAR;
 static uint32_t last_read_time = 0;
+static uint32_t last_transition_time = 0;
 
 void proximity_init(void) {
     if (!lox.begin()) {
@@ -48,6 +49,8 @@ void proximity_update(uint32_t now_ms) {
 
     // only fire event on transition
     if (new_state != proximity_state) {
+    if (now_ms - last_transition_time >= 2000) {
+        last_transition_time = now_ms;
         proximity_state = new_state;
 
         Event e;
@@ -56,15 +59,13 @@ void proximity_update(uint32_t now_ms) {
 
         if (new_state == PROXIMITY_TOO_CLOSE) {
             e.type = EVENT_PROX_TOO_CLOSE;
-            Serial.println("Personal space!!");
         } else if (new_state == PROXIMITY_NEARBY) {
             e.type = EVENT_PROX_CLOSE;
-            Serial.println("Who's here!");
         } else {
             e.type = EVENT_PROX_FAR;
-            Serial.println("Seems far!");
         }
 
         event_queue_push(e);
     }
+}
 }

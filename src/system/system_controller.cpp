@@ -17,6 +17,7 @@
 #include "actuators/arms.h"
 #include "interpreters/sound_interpreter.h"
 #include "interpreters/proximity_interpreter.h"
+#include "sensors/proximity_sensor.h"
 
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
@@ -25,7 +26,7 @@ static BehaviorContext prev_context = CONTEXT_IDLE;
 
 static ActionTimer scream_timer, laugh_timer;
 static TransientEmotion last_transient = TRANSIENT_NONE;
-
+static ProximityState last_proximity = PROXIMITY_FAR;
 static BehaviorContext last_context = CONTEXT_IDLE;
 static SpeechFlags speech_state;
 static ActionTimer conversation_timer;
@@ -33,9 +34,19 @@ static ActionTimer shy_timer;
 static ActionTimer listening_timer;
 static ActionTimer annoyed_timer;
 static ActionTimer conversation_cooldown_timer;
+static ActionTimer someone_present_timer;
+static ActionTimer greeting_timer;
+static ActionTimer goodbye_timer;
+static ActionTimer too_close_timer;
+static ActionTimer lingering_timer;   // 30s nearby → uncomfortable
+static ActionTimer lingering_time_ms;
+static ActionTimer boredom_timer;     // 5min no change → bored
 static bool quiet_prev = false;
-static bool conversation_sound_played = false;
+static bool boredom_triggered = false;
 
+static bool conversation_sound_played = false;
+static bool goodbye_sound_played = false;
+static bool lingering_sound_played = false;
 
 
 BehaviorContext system_controller_get_context(void) {
@@ -109,11 +120,63 @@ void system_controller_update(uint32_t now_ms)
 
     last_transient = emo.transient;
 
+    if (proximity.nearby || proximity.too_close)
+        timer_start(&someone_present_timer, now_ms, 60000);
+
+    if (proximity.too_close) {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_SAD;
+        intent.tremble = true;
+        arms_intent.pose = ARMS_ATTACK;
+        arms_intent.one_shot = false;
+    if (timer_active(&too_close_timer, now_ms)) {
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_BRIEF_REACT;
+    }
+}
+
+    if (timer_active(&goodbye_timer, now_ms)) {
+    intent.override_mood = true;
+    intent.mood = EYES_MOOD_SAD;
+    arms_intent.pose = ARMS_WAVE;
+    arms_intent.one_shot = false;
+    if (!goodbye_sound_played) {
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_BRIEF_REACT;
+        goodbye_sound_played = true;
+    }
+}
+
+if (!timer_active(&goodbye_timer, now_ms)) {
+    goodbye_sound_played = false;
+}
+
+if((!timer_active(&lingering_timer, now_ms) && proximity.nearby) || (!timer_active(&lingering_timer, now_ms) && proximity.too_close)) {
+    current_context = CONTEXT_LINGERING;
+    timer_start(&lingering_time_ms, now_ms, 3000);
+    intent.override_mood = true;
+    intent.mood = EYES_MOOD_SAD;
+
+    if(timer_active(&lingering_time_ms, now_ms)) {
+        arms_intent.pose = ARMS_HOT;
+        arms_intent.one_shot = false;
+        if (!lingering_sound_played) {
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_BRIEF_REACT;
+        lingering_sound_played = true;
+    } 
+
+}
+}
+
+if (timer_active(&lingering_timer, now_ms)) {
+    lingering_sound_played = false;
+}
     // --------------------------
     // Determine behavior context
     // --------------------------
 
-    if (emo.transient != TRANSIENT_STARTLED && emo.transient != EMOTION_ANGRY) {
+    if (emo.transient != TRANSIENT_STARTLED /* && emo.transient != EMOTION_ANGRY */) {
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
@@ -275,6 +338,19 @@ else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
     intent.eye_height_R += 6;
 }
 
+if (timer_active(&greeting_timer, now_ms)) {
+     intent.override_mood = true;
+    intent.mood = EYES_MOOD_HAPPY;
+    arms_intent.pose = ARMS_WAVE;
+    arms_intent.one_shot = false;
+    intent.override_eye_height = true;
+    intent.eye_height_L += 6;
+    intent.eye_height_R += 6;
+    g_sound_intent.play = true;
+    g_sound_intent.pattern = SOUND_LAUGH;
+}
+
+
     if (current_context == CONTEXT_ANNOYED)
     {
         intent.override_mood = true;
@@ -358,6 +434,35 @@ else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
         }
     }
 
+
+    // Boredom // // 
+
+    // // // // // // 
+if (!timer_active(&boredom_timer, now_ms) && !boredom_triggered) {
+    boredom_triggered = true;
+}
+
+if (timer_active(&boredom_timer, now_ms)) {
+    boredom_triggered = false;  // reset when timer restarts
+}
+
+
+if(boredom_triggered) {
+    if(chance_percent(80)) {
+        behavior_fsm_set_state(BEHAVIOR_BORED);
+    } else {
+        behavior_fsm_set_state(BEHAVIOR_ASLEEP);
+    }
+}
+
+
+if (behavior == BEHAVIOR_BORED) {
+    current_context = CONTEXT_BORED;
+    intent.override_mood = true;
+    intent.mood = EYES_MOOD_SAD;
+    arms_intent.pose = ARMS_IDLE;
+    arms_intent.one_shot = false;
+}
     // --------------------------
     // Physical modifiers
     // --------------------------
@@ -385,6 +490,8 @@ void system_controller_handle_event(const Event *event)
         case EVENT_TEMP_ENTER_HOT:
             current_comfort = COMFORT_HOT;
             Serial.println("Controller: entered HOT");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             break;
 
         case EVENT_TEMP_EXIT_HOT:
@@ -394,11 +501,14 @@ void system_controller_handle_event(const Event *event)
         case EVENT_TEMP_ENTER_COMFY:
             Serial.println("Is comfy.");
             current_comfort = COMFORT_COMFY;
+            
             break;
 
         case EVENT_TEMP_ENTER_COLD:
             current_comfort = COMFORT_COLD;
             Serial.println("Controller: entered COLD");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             
             break;
 
@@ -408,6 +518,8 @@ void system_controller_handle_event(const Event *event)
 
         case EVENT_SOUND_MUSIC_DETECTED: 
             Serial.println("Oh? is music?");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             break;  
             
         case EVENT_SOUND_PEAK:
@@ -416,16 +528,48 @@ void system_controller_handle_event(const Event *event)
 
         case EVENT_SOUND_BURST:
             Serial.println("BURST");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             break;
 
         case EVENT_SOUND_GENERAL_NOISE:
             Serial.println("NOISY!!");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             break;
 
         case EVENT_SOUND_TALKING:
             Serial.println("Is talking?");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
             break;
 
+        case EVENT_PROX_FAR:
+            last_proximity = PROXIMITY_FAR;
+            timer_start(&goodbye_timer, event->timestamp_ms, 3000);
+            timer_start(&boredom_timer, event->timestamp_ms, 300000);
+            timer_stop(&lingering_timer);
+            break;
+
+        case EVENT_PROX_CLOSE:
+    if (last_proximity == PROXIMITY_FAR) {
+        timer_start(&greeting_timer, event->timestamp_ms, 3000);
+        timer_start(&lingering_timer, event->timestamp_ms, 30000);
+        timer_start(&boredom_timer, event->timestamp_ms, 300000);
+    }
+
+    last_proximity = PROXIMITY_NEARBY;
+    boredom_triggered = false;
+    behavior_fsm_set_state(BEHAVIOR_AWAKE);  
+    break;
+
+    case EVENT_PROX_TOO_CLOSE:
+    last_proximity = PROXIMITY_TOO_CLOSE;
+    timer_start(&too_close_timer, event->timestamp_ms, 2000);
+    timer_start(&boredom_timer, event->timestamp_ms, 300000);
+    boredom_triggered = false;
+    behavior_fsm_set_state(BEHAVIOR_AWAKE);
+    break;
         default:
             break;
     }
