@@ -18,6 +18,7 @@
 #include "actuators/arms.h"
 #include "sensors/proximity_sensor.h"
 #include "interpreters/proximity_interpreter.h"
+#include "system/bluetooth.h"
 
 
 
@@ -37,6 +38,7 @@ void setup(void)
     mouth_init();
     arms_init();
     proximity_init();
+    bluetooth_init();
 }
 
 void loop(void)
@@ -57,6 +59,7 @@ void loop(void)
     mouth_update(now);
     arms_update(now);
     proximity_update(now);
+    bluetooth_update(now);
     
     if (Serial.available())
 {
