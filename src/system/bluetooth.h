@@ -11,7 +11,11 @@
 #define CMD_SIM_FAR        '7'
 #define CMD_SIM_TALKING    '8'
 
-
+#define CMD_DRIVE_FORWARD   'f'
+#define CMD_DRIVE_BACKWARD  'b'
+#define CMD_DRIVE_STOP      's'
+#define CMD_DRIVE_BRAKE     'k'
+#define CMD_DRIVE_SPEED_UP  'u'
 
 void bluetooth_init(void);
 void bluetooth_update(uint32_t now_ms);

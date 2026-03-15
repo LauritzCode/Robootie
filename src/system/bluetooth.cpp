@@ -2,9 +2,18 @@
 #include "brain/behavior_fsm.h"
 #include <Arduino.h>
 #include "core/event_queue.h"
+#include "actuators/drive.h"
+
+
+static uint8_t current_speed = 0;
 
 void bluetooth_init(void) {
     Serial1.begin(9600);
+}
+
+static void bluetooth_drive(DriveDirection direction, uint8_t speed) {
+    DriveIntent intent = {direction, speed};
+    drive_set_intent(&intent);
 }
 
 static void bluetooth_push_event(EventType type, uint32_t now_ms)  {
@@ -42,6 +51,26 @@ static void bluetooth_handle_cmd(unsigned char cmd, uint32_t now_ms) {
         break;
         case CMD_SIM_TALKING: 
         bluetooth_push_event(EVENT_SOUND_TALKING, now_ms);
+        break;
+
+        case CMD_DRIVE_FORWARD:
+    bluetooth_drive(DRIVE_FORWARD, current_speed);
+    break;
+    case CMD_DRIVE_BACKWARD:
+        bluetooth_drive(DRIVE_BACKWARD, current_speed);
+        break;
+    case CMD_DRIVE_STOP:
+        current_speed = 0;
+        bluetooth_drive(DRIVE_STOP, 0);
+        break;
+    case CMD_DRIVE_BRAKE:
+        bluetooth_drive(DRIVE_BRAKE, 255);
+        break;
+    case CMD_DRIVE_SPEED_UP:
+        if (current_speed <= 245) current_speed += 10;
+        bluetooth_drive(DRIVE_FORWARD, current_speed);
+        Serial.print("Speed: ");
+        Serial.println(current_speed);
         break;
         default:
         break;
