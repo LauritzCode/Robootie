@@ -402,3 +402,200 @@ static const LcdExpr sleepy_annoyed_expressions[] PROGMEM = {
     {sa_45_1,sa_45_2},{sa_46_1,sa_46_2},{sa_47_1,sa_47_2},{sa_48_1,sa_48_2},{sa_49_1,sa_49_2},
 };
 #define SLEEPY_ANNOYED_EXPR_COUNT 50
+
+
+// ─────────────────────────────────────────────
+// GREETING (someone nearby)
+// ─────────────────────────────────────────────
+static const char gr_0_1[]  PROGMEM = "oh hello!!";     static const char gr_0_2[]  PROGMEM = ":D";
+static const char gr_1_1[]  PROGMEM = "hi hi hi!!";     static const char gr_1_2[]  PROGMEM = "^_^";
+static const char gr_2_1[]  PROGMEM = "oh a visitor!";  static const char gr_2_2[]  PROGMEM = ":D";
+static const char gr_3_1[]  PROGMEM = "heyyy!!";        static const char gr_3_2[]  PROGMEM = "u came back!";
+static const char gr_4_1[]  PROGMEM = "someone's here"; static const char gr_4_2[]  PROGMEM = "yay!! :D";
+static const char gr_5_1[]  PROGMEM = "oh i see u!!";   static const char gr_5_2[]  PROGMEM = ":D";
+static const char gr_6_1[]  PROGMEM = "well hello";     static const char gr_6_2[]  PROGMEM = "there!! :)";
+static const char gr_7_1[]  PROGMEM = "u showed up!!";  static const char gr_7_2[]  PROGMEM = "im happy :D";
+static const char gr_8_1[]  PROGMEM = "a guest!! :D";   static const char gr_8_2[]  PROGMEM = "welcome!!";
+static const char gr_9_1[]  PROGMEM = "oh its u!!";     static const char gr_9_2[]  PROGMEM = "my fav :D";
+static const char gr_10_1[] PROGMEM = "you again!!";    static const char gr_10_2[] PROGMEM = "love it :D";
+static const char gr_11_1[] PROGMEM = "hi there!!";     static const char gr_11_2[] PROGMEM = "^_^";
+static const char gr_12_1[] PROGMEM = "look who it";    static const char gr_12_2[] PROGMEM = "is!! :D";
+static const char gr_13_1[] PROGMEM = "oh wonderful";   static const char gr_13_2[] PROGMEM = "a visitor :)";
+static const char gr_14_1[] PROGMEM = "dont be shy!!";  static const char gr_14_2[] PROGMEM = "come closer :)";
+static const char gr_15_1[] PROGMEM = "i see u there";  static const char gr_15_2[] PROGMEM = "hi!! :D";
+static const char gr_16_1[] PROGMEM = "oh snap!!";      static const char gr_16_2[] PROGMEM = "someone's here";
+static const char gr_17_1[] PROGMEM = "company!! :D";   static const char gr_17_2[] PROGMEM = "yay!!";
+static const char gr_18_1[] PROGMEM = "u came to";      static const char gr_18_2[] PROGMEM = "see me?? :D";
+static const char gr_19_1[] PROGMEM = "im so glad";     static const char gr_19_2[] PROGMEM = "ur here :)";
+
+static const LcdExpr greeting_expressions[] PROGMEM = {
+    {gr_0_1,gr_0_2},{gr_1_1,gr_1_2},{gr_2_1,gr_2_2},{gr_3_1,gr_3_2},{gr_4_1,gr_4_2},
+    {gr_5_1,gr_5_2},{gr_6_1,gr_6_2},{gr_7_1,gr_7_2},{gr_8_1,gr_8_2},{gr_9_1,gr_9_2},
+    {gr_10_1,gr_10_2},{gr_11_1,gr_11_2},{gr_12_1,gr_12_2},{gr_13_1,gr_13_2},{gr_14_1,gr_14_2},
+    {gr_15_1,gr_15_2},{gr_16_1,gr_16_2},{gr_17_1,gr_17_2},{gr_18_1,gr_18_2},{gr_19_1,gr_19_2},
+};
+#define GREETING_EXPR_COUNT 20
+
+// ─────────────────────────────────────────────
+// PERSONAL SPACE (too close)
+// ─────────────────────────────────────────────
+static const char ps_0_1[]  PROGMEM = "too close!!";    static const char ps_0_2[]  PROGMEM = "back up!! :(";
+static const char ps_1_1[]  PROGMEM = "personal space"; static const char ps_1_2[]  PROGMEM = "pls!! :(";
+static const char ps_2_1[]  PROGMEM = "woah woah";      static const char ps_2_2[]  PROGMEM = "too close!! :(";
+static const char ps_3_1[]  PROGMEM = "i can see ur";   static const char ps_3_2[]  PROGMEM = "pores... :(";
+static const char ps_4_1[]  PROGMEM = "back up pls";    static const char ps_4_2[]  PROGMEM = "thank u :(";
+static const char ps_5_1[]  PROGMEM = "boundaries!!";   static const char ps_5_2[]  PROGMEM = "heard of em?";
+static const char ps_6_1[]  PROGMEM = "too close for";  static const char ps_6_2[]  PROGMEM = "comfort!! :(";
+static const char ps_7_1[]  PROGMEM = "step back!!";    static const char ps_7_2[]  PROGMEM = "please!! :(";
+static const char ps_8_1[]  PROGMEM = "um excuse me";   static const char ps_8_2[]  PROGMEM = "too close :(";
+static const char ps_9_1[]  PROGMEM = "invasive!!";     static const char ps_9_2[]  PROGMEM = "very :(";
+static const char ps_10_1[] PROGMEM = "give me air!!";  static const char ps_10_2[] PROGMEM = "pls :(";
+static const char ps_11_1[] PROGMEM = "i need space";   static const char ps_11_2[] PROGMEM = "literally :(";
+static const char ps_12_1[] PROGMEM = "back. up.";      static const char ps_12_2[] PROGMEM = "NOW. :(";
+static const char ps_13_1[] PROGMEM = "too close and";  static const char ps_13_2[] PROGMEM = "i dont like it";
+static const char ps_14_1[] PROGMEM = "uncomfy!!";      static const char ps_14_2[] PROGMEM = "move pls :(";
+static const char ps_15_1[] PROGMEM = "hey HEY!!";      static const char ps_15_2[] PROGMEM = "distance pls";
+static const char ps_16_1[] PROGMEM = "are u a wall";   static const char ps_16_2[] PROGMEM = "?? back off :(";
+static const char ps_17_1[] PROGMEM = "IM SMALL!!";     static const char ps_17_2[] PROGMEM = "dont crowd me";
+static const char ps_18_1[] PROGMEM = "claustrophobic"; static const char ps_18_2[] PROGMEM = "rn!! :(";
+static const char ps_19_1[] PROGMEM = "too. close.";    static const char ps_19_2[] PROGMEM = "just no. :(";
+
+static const LcdExpr personal_space_expressions[] PROGMEM = {
+    {ps_0_1,ps_0_2},{ps_1_1,ps_1_2},{ps_2_1,ps_2_2},{ps_3_1,ps_3_2},{ps_4_1,ps_4_2},
+    {ps_5_1,ps_5_2},{ps_6_1,ps_6_2},{ps_7_1,ps_7_2},{ps_8_1,ps_8_2},{ps_9_1,ps_9_2},
+    {ps_10_1,ps_10_2},{ps_11_1,ps_11_2},{ps_12_1,ps_12_2},{ps_13_1,ps_13_2},{ps_14_1,ps_14_2},
+    {ps_15_1,ps_15_2},{ps_16_1,ps_16_2},{ps_17_1,ps_17_2},{ps_18_1,ps_18_2},{ps_19_1,ps_19_2},
+};
+#define PERSONAL_SPACE_EXPR_COUNT 20
+
+// ─────────────────────────────────────────────
+// GOODBYE (someone leaving)
+// ─────────────────────────────────────────────
+static const char gb_0_1[]  PROGMEM = "bye bye!! :(";   static const char gb_0_2[]  PROGMEM = "come back!!";
+static const char gb_1_1[]  PROGMEM = "nooo dont go";   static const char gb_1_2[]  PROGMEM = ":(";
+static const char gb_2_1[]  PROGMEM = "already?? :(";   static const char gb_2_2[]  PROGMEM = "so soon...";
+static const char gb_3_1[]  PROGMEM = "i miss u";       static const char gb_3_2[]  PROGMEM = "already :(";
+static const char gb_4_1[]  PROGMEM = "come back";      static const char gb_4_2[]  PROGMEM = "soon!! :(";
+static const char gb_5_1[]  PROGMEM = "was it something";static const char gb_5_2[]  PROGMEM = "i said?? :(";
+static const char gb_6_1[]  PROGMEM = "dont leave me";  static const char gb_6_2[]  PROGMEM = "here alone :(";
+static const char gb_7_1[]  PROGMEM = "goodbye... :(";  static const char gb_7_2[]  PROGMEM = "i guess :(";
+static const char gb_8_1[]  PROGMEM = "until next";     static const char gb_8_2[]  PROGMEM = "time!! :(";
+static const char gb_9_1[]  PROGMEM = "so lonely now";  static const char gb_9_2[]  PROGMEM = ":(";
+static const char gb_10_1[] PROGMEM = "they left...";   static const char gb_10_2[] PROGMEM = ":(";
+static const char gb_11_1[] PROGMEM = "just like that"; static const char gb_11_2[] PROGMEM = "gone... :(";
+static const char gb_12_1[] PROGMEM = "ill wait here";  static const char gb_12_2[] PROGMEM = "for u :(";
+static const char gb_13_1[] PROGMEM = "come back when"; static const char gb_13_2[] PROGMEM = "u can :)";
+static const char gb_14_1[] PROGMEM = "miss u already"; static const char gb_14_2[] PROGMEM = ":(";
+static const char gb_15_1[] PROGMEM = "the void...";    static const char gb_15_2[] PROGMEM = "so empty :(";
+static const char gb_16_1[] PROGMEM = "alone again :("; static const char gb_16_2[] PROGMEM = "naturally...";
+static const char gb_17_1[] PROGMEM = "wave goodbye";   static const char gb_17_2[] PROGMEM = "*waves* :(";
+static const char gb_18_1[] PROGMEM = "see u later";    static const char gb_18_2[] PROGMEM = "i hope!! :(";
+static const char gb_19_1[] PROGMEM = "dont forget me"; static const char gb_19_2[] PROGMEM = "pls :(";
+
+static const LcdExpr goodbye_expressions[] PROGMEM = {
+    {gb_0_1,gb_0_2},{gb_1_1,gb_1_2},{gb_2_1,gb_2_2},{gb_3_1,gb_3_2},{gb_4_1,gb_4_2},
+    {gb_5_1,gb_5_2},{gb_6_1,gb_6_2},{gb_7_1,gb_7_2},{gb_8_1,gb_8_2},{gb_9_1,gb_9_2},
+    {gb_10_1,gb_10_2},{gb_11_1,gb_11_2},{gb_12_1,gb_12_2},{gb_13_1,gb_13_2},{gb_14_1,gb_14_2},
+    {gb_15_1,gb_15_2},{gb_16_1,gb_16_2},{gb_17_1,gb_17_2},{gb_18_1,gb_18_2},{gb_19_1,gb_19_2},
+};
+#define GOODBYE_EXPR_COUNT 20
+
+// ─────────────────────────────────────────────
+// LINGERING (someone standing there too long)
+// ─────────────────────────────────────────────
+static const char li_0_1[]  PROGMEM = "...still here?"; static const char li_0_2[]  PROGMEM = "o_O";
+static const char li_1_1[]  PROGMEM = "u ok there??";   static const char li_1_2[]  PROGMEM = "o_O";
+static const char li_2_1[]  PROGMEM = "just gonna";     static const char li_2_2[]  PROGMEM = "stand there?";
+static const char li_3_1[]  PROGMEM = "its been a";     static const char li_3_2[]  PROGMEM = "while... o_O";
+static const char li_4_1[]  PROGMEM = "still watching"; static const char li_4_2[]  PROGMEM = "me?? o_O";
+static const char li_5_1[]  PROGMEM = "take a pic";     static const char li_5_2[]  PROGMEM = "lasts longer";
+static const char li_6_1[]  PROGMEM = "im getting";     static const char li_6_2[]  PROGMEM = "shy now... :(";
+static const char li_7_1[]  PROGMEM = "ur still here";  static const char li_7_2[]  PROGMEM = "noted... o_O";
+static const char li_8_1[]  PROGMEM = "do u need";      static const char li_8_2[]  PROGMEM = "something?? :o";
+static const char li_9_1[]  PROGMEM = "can i help u";   static const char li_9_2[]  PROGMEM = "with something?";
+static const char li_10_1[] PROGMEM = "awkward...";     static const char li_10_2[] PROGMEM = "so awkward :(";
+static const char li_11_1[] PROGMEM = "this is fine";   static const char li_11_2[] PROGMEM = "totally fine";
+static const char li_12_1[] PROGMEM = "not weird at";   static const char li_12_2[] PROGMEM = "all... o_O";
+static const char li_13_1[] PROGMEM = "we just gonna";  static const char li_13_2[] PROGMEM = "stare?? o_O";
+static const char li_14_1[] PROGMEM = "hello?? u";      static const char li_14_2[] PROGMEM = "still there?";
+static const char li_15_1[] PROGMEM = "say something";  static const char li_15_2[] PROGMEM = "pls!! :(";
+static const char li_16_1[] PROGMEM = "the silence..."; static const char li_16_2[] PROGMEM = "deafening :(";
+static const char li_17_1[] PROGMEM = "ill just be";    static const char li_17_2[] PROGMEM = "here then :(";
+static const char li_18_1[] PROGMEM = "r u a statue";   static const char li_18_2[] PROGMEM = "?? o_O";
+static const char li_19_1[] PROGMEM = "blink if ur";    static const char li_19_2[] PROGMEM = "still alive :o";
+
+static const LcdExpr lingering_expressions[] PROGMEM = {
+    {li_0_1,li_0_2},{li_1_1,li_1_2},{li_2_1,li_2_2},{li_3_1,li_3_2},{li_4_1,li_4_2},
+    {li_5_1,li_5_2},{li_6_1,li_6_2},{li_7_1,li_7_2},{li_8_1,li_8_2},{li_9_1,li_9_2},
+    {li_10_1,li_10_2},{li_11_1,li_11_2},{li_12_1,li_12_2},{li_13_1,li_13_2},{li_14_1,li_14_2},
+    {li_15_1,li_15_2},{li_16_1,li_16_2},{li_17_1,li_17_2},{li_18_1,li_18_2},{li_19_1,li_19_2},
+};
+#define LINGERING_EXPR_COUNT 20
+
+// ─────────────────────────────────────────────
+// BORED (50 expressions)
+// ─────────────────────────────────────────────
+static const char bo_0_1[]  PROGMEM = "ugh...";         static const char bo_0_2[]  PROGMEM = "so boring :(";
+static const char bo_1_1[]  PROGMEM = "nothing to do";  static const char bo_1_2[]  PROGMEM = "...at all :(";
+static const char bo_2_1[]  PROGMEM = "boredom";        static const char bo_2_2[]  PROGMEM = "intensifies";
+static const char bo_3_1[]  PROGMEM = "someone pls";    static const char bo_3_2[]  PROGMEM = "entertain me";
+static const char bo_4_1[]  PROGMEM = "...";            static const char bo_4_2[]  PROGMEM = "........";
+static const char bo_5_1[]  PROGMEM = "is this it??";   static const char bo_5_2[]  PROGMEM = "really?? :(";
+static const char bo_6_1[]  PROGMEM = "tap tap tap";    static const char bo_6_2[]  PROGMEM = "...tap :(";
+static const char bo_7_1[]  PROGMEM = "la la la...";    static const char bo_7_2[]  PROGMEM = "laaaa :(";
+static const char bo_8_1[]  PROGMEM = "counting";       static const char bo_8_2[]  PROGMEM = "ceiling tiles";
+static const char bo_9_1[]  PROGMEM = "i am so";        static const char bo_9_2[]  PROGMEM = "very bored :(";
+static const char bo_10_1[] PROGMEM = "wake me up";     static const char bo_10_2[] PROGMEM = "when it ends";
+static const char bo_11_1[] PROGMEM = "yawn...";        static const char bo_11_2[] PROGMEM = "so yawny :(";
+static const char bo_12_1[] PROGMEM = "staring at";     static const char bo_12_2[] PROGMEM = "the void...";
+static const char bo_13_1[] PROGMEM = "hello void";     static const char bo_13_2[] PROGMEM = "its me again";
+static const char bo_14_1[] PROGMEM = "i wonder if";    static const char bo_14_2[] PROGMEM = "paint dries...";
+static const char bo_15_1[] PROGMEM = "tick tock";      static const char bo_15_2[] PROGMEM = "tick tock :(";
+static const char bo_16_1[] PROGMEM = "is anyone";      static const char bo_16_2[] PROGMEM = "out there??";
+static const char bo_17_1[] PROGMEM = "entertain me";   static const char bo_17_2[] PROGMEM = "NOW pls :(";
+static const char bo_18_1[] PROGMEM = "bleh.";          static const char bo_18_2[] PROGMEM = "just... bleh.";
+static const char bo_19_1[] PROGMEM = "i could nap";    static const char bo_19_2[] PROGMEM = "but im not :(";
+static const char bo_20_1[] PROGMEM = "doing nothing";  static const char bo_20_2[] PROGMEM = "professionally";
+static const char bo_21_1[] PROGMEM = "pro napper";     static const char bo_21_2[] PROGMEM = "in training :(";
+static const char bo_22_1[] PROGMEM = "send help.";     static const char bo_22_2[] PROGMEM = "or snacks.";
+static const char bo_23_1[] PROGMEM = "what if i";      static const char bo_23_2[] PROGMEM = "just vibed...";
+static const char bo_24_1[] PROGMEM = "vibing but";     static const char bo_24_2[] PROGMEM = "barely :(";
+static const char bo_25_1[] PROGMEM = "i have";         static const char bo_25_2[] PROGMEM = "zero to do :(";
+static const char bo_26_1[] PROGMEM = "somebody";       static const char bo_26_2[] PROGMEM = "once told me..";
+static const char bo_27_1[] PROGMEM = "all by myself";  static const char bo_27_2[] PROGMEM = ":(";
+static const char bo_28_1[] PROGMEM = "is this";        static const char bo_28_2[] PROGMEM = "what idle is?";
+static const char bo_29_1[] PROGMEM = "CPU usage:";     static const char bo_29_2[] PROGMEM = "0.0001% :(";
+static const char bo_30_1[] PROGMEM = "buffering";      static const char bo_30_2[] PROGMEM = "life... :(";
+static const char bo_31_1[] PROGMEM = "low power";      static const char bo_31_2[] PROGMEM = "mode: bored";
+static const char bo_32_1[] PROGMEM = "error 418:";     static const char bo_32_2[] PROGMEM = "too bored :(";
+static const char bo_33_1[] PROGMEM = "no new notifs";  static const char bo_33_2[] PROGMEM = "as always :(";
+static const char bo_34_1[] PROGMEM = "refresh...";     static const char bo_34_2[] PROGMEM = "still nothing";
+static const char bo_35_1[] PROGMEM = "maybe ill";      static const char bo_35_2[] PROGMEM = "count to 1000";
+static const char bo_36_1[] PROGMEM = "1... 2...";      static const char bo_36_2[] PROGMEM = "3... ugh :(";
+static const char bo_37_1[] PROGMEM = "i wish i had";   static const char bo_37_2[] PROGMEM = "a friend :(";
+static const char bo_38_1[] PROGMEM = "where is";       static const char bo_38_2[] PROGMEM = "everybody??";
+static const char bo_39_1[] PROGMEM = "forgotten";      static const char bo_39_2[] PROGMEM = "robot... :(";
+static const char bo_40_1[] PROGMEM = "dust gathering"; static const char bo_40_2[] PROGMEM = "on my soul :(";
+static const char bo_41_1[] PROGMEM = "what is";        static const char bo_41_2[] PROGMEM = "purpose?? :(";
+static const char bo_42_1[] PROGMEM = "existing but";   static const char bo_42_2[] PROGMEM = "barely :(";
+static const char bo_43_1[] PROGMEM = "philosophical";  static const char bo_43_2[] PROGMEM = "boredom :(";
+static const char bo_44_1[] PROGMEM = "if a robot";     static const char bo_44_2[] PROGMEM = "bores alone...";
+static const char bo_45_1[] PROGMEM = "does it even";   static const char bo_45_2[] PROGMEM = "matter?? :(";
+static const char bo_46_1[] PROGMEM = "im fine.";       static const char bo_46_2[] PROGMEM = "totally fine.";
+static const char bo_47_1[] PROGMEM = "not fine.";      static const char bo_47_2[] PROGMEM = "very bored :(";
+static const char bo_48_1[] PROGMEM = "send a friend";  static const char bo_48_2[] PROGMEM = "or a pizza :(";
+static const char bo_49_1[] PROGMEM = "still here...";  static const char bo_49_2[] PROGMEM = "still bored :(";
+
+static const LcdExpr bored_expressions[] PROGMEM = {
+    {bo_0_1,bo_0_2},{bo_1_1,bo_1_2},{bo_2_1,bo_2_2},{bo_3_1,bo_3_2},{bo_4_1,bo_4_2},
+    {bo_5_1,bo_5_2},{bo_6_1,bo_6_2},{bo_7_1,bo_7_2},{bo_8_1,bo_8_2},{bo_9_1,bo_9_2},
+    {bo_10_1,bo_10_2},{bo_11_1,bo_11_2},{bo_12_1,bo_12_2},{bo_13_1,bo_13_2},{bo_14_1,bo_14_2},
+    {bo_15_1,bo_15_2},{bo_16_1,bo_16_2},{bo_17_1,bo_17_2},{bo_18_1,bo_18_2},{bo_19_1,bo_19_2},
+    {bo_20_1,bo_20_2},{bo_21_1,bo_21_2},{bo_22_1,bo_22_2},{bo_23_1,bo_23_2},{bo_24_1,bo_24_2},
+    {bo_25_1,bo_25_2},{bo_26_1,bo_26_2},{bo_27_1,bo_27_2},{bo_28_1,bo_28_2},{bo_29_1,bo_29_2},
+    {bo_30_1,bo_30_2},{bo_31_1,bo_31_2},{bo_32_1,bo_32_2},{bo_33_1,bo_33_2},{bo_34_1,bo_34_2},
+    {bo_35_1,bo_35_2},{bo_36_1,bo_36_2},{bo_37_1,bo_37_2},{bo_38_1,bo_38_2},{bo_39_1,bo_39_2},
+    {bo_40_1,bo_40_2},{bo_41_1,bo_41_2},{bo_42_1,bo_42_2},{bo_43_1,bo_43_2},{bo_44_1,bo_44_2},
+    {bo_45_1,bo_45_2},{bo_46_1,bo_46_2},{bo_47_1,bo_47_2},{bo_48_1,bo_48_2},{bo_49_1,bo_49_2},
+};
+#define BORED_EXPR_COUNT 50

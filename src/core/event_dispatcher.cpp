@@ -8,6 +8,7 @@
 #include "interpreters/sound_interpreter.h"
 #include "actuators/mouth.h"
 #include "actuators/arms.h"
+#include "interpreters/proximity_interpreter.h"
 
 
 
@@ -25,6 +26,7 @@ void dispatch_events(void) {
         sound_interpreter_handle_event(&event);
         mouth_handle_event(&event);
         arms_handle_event(&event);
+        proximity_interpreter_handle_event(&event);
 
     }
 }

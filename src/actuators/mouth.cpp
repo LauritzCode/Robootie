@@ -39,6 +39,11 @@ typedef enum {
     MOUTH_NOISE,
     MOUTH_MUSIC,
     MOUTH_SLEEPY_ANNOYED,
+    MOUTH_GREETING,
+    MOUTH_PERSONAL_SPACE,
+    MOUTH_GOODBYE,
+    MOUTH_LINGERING,
+    MOUTH_BORED
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -105,6 +110,21 @@ static void render(MouthDisplay d) {
         case MOUTH_SLEEPY_ANNOYED:
             render_expr(sleepy_annoyed_expressions, SLEEPY_ANNOYED_EXPR_COUNT);
             break;
+        case MOUTH_GREETING:
+            render_expr(greeting_expressions, GREETING_EXPR_COUNT);
+        break;
+        case MOUTH_PERSONAL_SPACE:
+            render_expr(personal_space_expressions, PERSONAL_SPACE_EXPR_COUNT);
+        break;
+        case MOUTH_GOODBYE:
+            render_expr(goodbye_expressions, GOODBYE_EXPR_COUNT);
+        break;
+        case MOUTH_LINGERING:
+            render_expr(lingering_expressions, LINGERING_EXPR_COUNT);
+        break;
+        case MOUTH_BORED:
+        render_expr(bored_expressions, BORED_EXPR_COUNT);
+        break;
         default:
             lcd.clear();
             break;
@@ -180,7 +200,11 @@ void mouth_update(uint32_t now_ms) {
         // noise reaction driven by context, not raw flag
         desired = MOUTH_NOISE;
 
-    } else {
+    } else if (ctx == CONTEXT_LINGERING) {
+    desired = MOUTH_LINGERING;
+} else if (ctx == CONTEXT_BORED) {
+    desired = MOUTH_BORED;
+} else {
         // comfort flags (highest sustained priority)
         ComfortFlags comfort = comfort_interpreter_get_flags();
         if      (comfort.overheated) desired = MOUTH_OVERHEATED;
@@ -209,11 +233,14 @@ void mouth_handle_event(const Event *event) {
     MouthDisplay next_transient = MOUTH_IDLE;
 
     switch (event->type) {
-        case EVENT_TEMP_EXIT_HOT:         next_transient = MOUTH_TEMP_EXIT_HOT;   break;
+        case EVENT_TEMP_EXIT_HOT:         next_transient = MOUTH_TEMP_EXIT_HOT;    break;
         case EVENT_TEMP_ENTER_COMFY:      next_transient = MOUTH_TEMP_ENTER_COMFY; break;
-        case EVENT_TEMP_EXIT_COLD:        next_transient = MOUTH_TEMP_EXIT_COLD;  break;
-        case EVENT_SOUND_BURST:           next_transient = MOUTH_SOUND_BURST;     break;
-        case EVENT_SOUND_GENERAL_NOISE:   next_transient = MOUTH_NOISE;           break;
+        case EVENT_TEMP_EXIT_COLD:        next_transient = MOUTH_TEMP_EXIT_COLD;   break;
+        case EVENT_SOUND_BURST:           next_transient = MOUTH_SOUND_BURST;      break;
+        case EVENT_SOUND_GENERAL_NOISE:   next_transient = MOUTH_NOISE;            break;
+        case EVENT_PROX_CLOSE:            next_transient = MOUTH_GREETING;         break;
+        case EVENT_PROX_TOO_CLOSE:        next_transient = MOUTH_PERSONAL_SPACE;   break;
+        case EVENT_PROX_FAR:              next_transient = MOUTH_GOODBYE;          break;
         default: return;
     }
 

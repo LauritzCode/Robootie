@@ -33,7 +33,13 @@ typedef enum {
     EVENT_SOUND_TALKING,
     EVENT_SOUND_PEAK,
     EVENT_SOUND_MUSIC_DETECTED,
-    EVENT_SOUND_GENERAL_NOISE
+    EVENT_SOUND_GENERAL_NOISE,
+
+    // Proximity related events 
+
+    EVENT_PROX_FAR,
+    EVENT_PROX_CLOSE,
+    EVENT_PROX_TOO_CLOSE
 
 } EventType;
 

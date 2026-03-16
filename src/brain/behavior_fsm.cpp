@@ -2,9 +2,11 @@
 #include <Arduino.h>
 
 static BehaviorState current_state;
+static bool bored_sleep = false;
+
 
 void behavior_fsm_init(void) {
-    current_state = BEHAVIOR_ASLEEP;
+    current_state = BEHAVIOR_AWAKE;
     Serial.println("FSM init: ASLEEP");
 }
 
@@ -21,7 +23,9 @@ void behavior_fsm_handle_event(const Event *event) {
         case BEHAVIOR_AWAKE: 
         handle_awake_state(event);
         break;
-
+        case BEHAVIOR_BORED:
+        handle_bored_state(event);
+        break;
         default: 
         // should never happen
         break;
@@ -33,14 +37,11 @@ void behavior_fsm_handle_event(const Event *event) {
  void handle_asleep_state(const Event *event) {
     switch (event->type) {
         case EVENT_LIGHT_BECAME_BRIGHT:
-        current_state = BEHAVIOR_AWAKE;
-        Serial.println("FSM: ASLEEP -> AWAKE");
-        break;
-
-
-        default: 
-              /* Ignore all other events */
-        break;
+            if (!bored_sleep)
+                current_state = BEHAVIOR_AWAKE;
+            break;
+        default:
+            break;
     }
 }
 
@@ -57,4 +58,22 @@ void behavior_fsm_handle_event(const Event *event) {
             /* Ignore all other events */
             break;
     }
+}
+
+void handle_bored_state(const Event *event) {
+    switch (event->type) {
+        case EVENT_LIGHT_BECAME_BRIGHT:
+            current_state = BEHAVIOR_AWAKE;
+            break;
+        default:
+            break;
+    }
+}
+
+void behavior_fsm_set_state(BehaviorState state) {
+    if (state == BEHAVIOR_ASLEEP && current_state == BEHAVIOR_BORED)
+        bored_sleep = true;
+    if (state == BEHAVIOR_AWAKE)
+        bored_sleep = false;
+    current_state = state;
 }

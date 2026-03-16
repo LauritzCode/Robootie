@@ -16,8 +16,10 @@
 #include "actuators/buzzer.h"
 #include "actuators/mouth.h"
 #include "actuators/arms.h"
-
-
+#include "sensors/proximity_sensor.h"
+#include "interpreters/proximity_interpreter.h"
+#include "system/bluetooth.h"
+#include "actuators/drive.h"
 
 
 
@@ -32,9 +34,13 @@ void setup(void)
     sound_sensor_init();
     light_interpreter_init();
     comfort_interpreter_init();
+    proximity_interpreter_init();
     eyes_init();
     mouth_init();
     arms_init();
+    proximity_init();
+    bluetooth_init();
+    drive_init();
 }
 
 void loop(void)
@@ -54,19 +60,7 @@ void loop(void)
     eyes_update(now);
     mouth_update(now);
     arms_update(now);
-    
-    if (Serial.available())
-{
-    char cmd = Serial.read();
-
-    if (cmd == 's')
-        simulation_push_event(EVENT_SOUND_BURST, now);
-
-    if (cmd == 'm')
-        simulation_push_event(EVENT_SOUND_MUSIC_DETECTED, now);
-     
-}
-
-
-
+    proximity_update(now);
+    bluetooth_update(now);
+    drive_update(now);
 }
