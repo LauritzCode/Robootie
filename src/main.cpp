@@ -32,6 +32,7 @@ void setup(void)
     light_sensor_init();
     temp_sensor_init();
     sound_sensor_init();
+    system_controller_init();
     light_interpreter_init();
     comfort_interpreter_init();
     proximity_interpreter_init();

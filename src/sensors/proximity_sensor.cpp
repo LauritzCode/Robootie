@@ -12,6 +12,7 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 static ProximityState proximity_state = PROXIMITY_FAR;
 static uint32_t last_read_time = 0;
 static uint32_t last_transition_time = 0;
+static bool proximity_initialized = false;
 
 void proximity_init(void) {
     if (!lox.begin()) {
@@ -19,10 +20,13 @@ void proximity_init(void) {
         return;
     }
     lox.startRangeContinuous();
+    proximity_initialized = true;
     Serial.println("VL53L0X ready.");
 }
 
 void proximity_update(uint32_t now_ms) {
+
+    if (!proximity_initialized) return;
 
     BehaviorState behavior_state = behavior_fsm_get_state();
     BehaviorContext behavior_context = system_controller_get_context();

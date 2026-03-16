@@ -61,7 +61,7 @@ const SoundIntent* system_controller_get_sound_intent(void)
 
 void system_controller_init(void)
 {
-    /* nothing yet */
+    timer_start(&boredom_timer, millis(), 300000);
 }
 
 void system_controller_update(uint32_t now_ms)
@@ -176,11 +176,7 @@ if (timer_active(&lingering_timer, now_ms)) {
     // Determine behavior context
     // --------------------------
 
-<<<<<<< HEAD
     if (emo.transient != TRANSIENT_STARTLED && emo.base != EMOTION_ANGRY) {
-=======
-    if (emo.transient != TRANSIENT_STARTLED /* && emo.transient != EMOTION_ANGRY */) {
->>>>>>> 3f7734e2cca4a6f6d2a72d182e3186e11cf58198
     if (sound.noise)
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
@@ -321,7 +317,6 @@ if (timer_active(&lingering_timer, now_ms)) {
     // --------------------------
     // Context overlays
     // --------------------------
-<<<<<<< HEAD
     if (current_context == CONTEXT_LISTENING) {
 
         if (behavior == BEHAVIOR_ASLEEP) {
@@ -347,41 +342,18 @@ if (timer_active(&lingering_timer, now_ms)) {
         }
 
     }
-=======
-    if (current_context == CONTEXT_LISTENING && behavior == BEHAVIOR_ASLEEP)
-{
-   // intent.override_mood = true;
-   // intent.mood = EYES_MOOD_ANGRY;
-    //arms_intent.pose = ARMS_ATTACK;
-    // arms_intent.one_shot = false;
-    //intent.override_eye_height = true;
-    //intent.eye_height_L += 6;
-    // intent.eye_height_R += 6;
-}
-else if (current_context == CONTEXT_LISTENING && behavior != BEHAVIOR_ASLEEP)
-{
-    intent.override_mood = true;
-    intent.mood = EYES_MOOD_HAPPY;
-    arms_intent.pose = ARMS_WAVE;
-    arms_intent.one_shot = false;
-    intent.override_eye_height = true;
-    intent.eye_height_L += 6;
-    intent.eye_height_R += 6;
-}
 
-if (timer_active(&greeting_timer, now_ms)) {
-     intent.override_mood = true;
-    intent.mood = EYES_MOOD_HAPPY;
-    arms_intent.pose = ARMS_WAVE;
-    arms_intent.one_shot = false;
-    intent.override_eye_height = true;
-    intent.eye_height_L += 6;
-    intent.eye_height_R += 6;
-    g_sound_intent.play = true;
-    g_sound_intent.pattern = SOUND_LAUGH;
-}
-
->>>>>>> 3f7734e2cca4a6f6d2a72d182e3186e11cf58198
+    if (timer_active(&greeting_timer, now_ms)) {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_HAPPY;
+        arms_intent.pose = ARMS_WAVE;
+        arms_intent.one_shot = false;
+        intent.override_eye_height = true;
+        intent.eye_height_L += 6;
+        intent.eye_height_R += 6;
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_LAUGH;
+    }
 
     if (current_context == CONTEXT_ANNOYED)
     {
