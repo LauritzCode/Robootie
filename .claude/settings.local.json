@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find '/c/Users/lauri/OneDrive - Danmarks Tekniske Universitet/SEMESTER 2/PERSONAL PROJECTS/Robootie/Robootie' -maxdepth 2 -name README* -o -name *.md)"
+    ]
+  }
+}

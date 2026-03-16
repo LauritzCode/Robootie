@@ -29,6 +29,7 @@ void setup(void)
     behavior_fsm_init();
     light_sensor_init();
     temp_sensor_init();
+    sound_sensor_init();
     light_interpreter_init();
     comfort_interpreter_init();
     eyes_init();
