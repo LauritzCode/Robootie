@@ -16,6 +16,7 @@
 #include "brain/behavior_context.h"
 #include "brain/data.h"
 #include "interpreters/sound_interpreter.h"
+#include "sensors/mpu6050.h"
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
@@ -43,7 +44,11 @@ typedef enum {
     MOUTH_PERSONAL_SPACE,
     MOUTH_GOODBYE,
     MOUTH_LINGERING,
-    MOUTH_BORED
+    MOUTH_BORED,
+    MOUTH_SHAKEN,
+    MOUTH_PICKED_UP,
+    MOUTH_PUT_DOWN,
+    MOUTH_FLIPPED
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -123,8 +128,20 @@ static void render(MouthDisplay d) {
             render_expr(lingering_expressions, LINGERING_EXPR_COUNT);
         break;
         case MOUTH_BORED:
-        render_expr(bored_expressions, BORED_EXPR_COUNT);
-        break;
+            render_expr(bored_expressions, BORED_EXPR_COUNT);
+            break;
+        case MOUTH_SHAKEN:
+            render_expr(shaken_expressions, SHAKEN_EXPR_COUNT);
+            break;
+        case MOUTH_PICKED_UP:
+            render_expr(picked_up_expressions, PICKED_UP_EXPR_COUNT);
+            break;
+        case MOUTH_PUT_DOWN:
+            render_expr(put_down_expressions, PUT_DOWN_EXPR_COUNT);
+            break;
+        case MOUTH_FLIPPED:
+            render_expr(flipped_expressions, FLIPPED_EXPR_COUNT);
+            break;
         default:
             lcd.clear();
             break;
@@ -205,18 +222,25 @@ void mouth_update(uint32_t now_ms) {
 } else if (ctx == CONTEXT_BORED) {
     desired = MOUTH_BORED;
 } else {
-        // comfort flags (highest sustained priority)
-        ComfortFlags comfort = comfort_interpreter_get_flags();
-        if      (comfort.overheated) desired = MOUTH_OVERHEATED;
-        else if (comfort.chilled)    desired = MOUTH_CHILLED;
-        else if (comfort.hot)        desired = MOUTH_HOT;
-        else if (comfort.cold)       desired = MOUTH_COLD;
+        MotionFlags motion = motion_sensor_get_flags();
 
-        // sound flags (only music remains here, 
-        // talking and noise are handled by context above)
-        else {
-            SoundFlags sound = sound_interpreter_get_flags();
-            if (sound.music) desired = MOUTH_MUSIC;
+        // motion distress overrides everything sustained
+        if (motion.flipped) {
+            desired = MOUTH_FLIPPED;
+        } else if (motion.picked_up) {
+            desired = MOUTH_PICKED_UP;
+        } else {
+            // comfort flags
+            ComfortFlags comfort = comfort_interpreter_get_flags();
+            if      (comfort.overheated) desired = MOUTH_OVERHEATED;
+            else if (comfort.chilled)    desired = MOUTH_CHILLED;
+            else if (comfort.hot)        desired = MOUTH_HOT;
+            else if (comfort.cold)       desired = MOUTH_COLD;
+            else {
+                // sound flags (only music remains here)
+                SoundFlags sound = sound_interpreter_get_flags();
+                if (sound.music) desired = MOUTH_MUSIC;
+            }
         }
     }
 
@@ -241,6 +265,8 @@ void mouth_handle_event(const Event *event) {
         case EVENT_PROX_CLOSE:            next_transient = MOUTH_GREETING;         break;
         case EVENT_PROX_TOO_CLOSE:        next_transient = MOUTH_PERSONAL_SPACE;   break;
         case EVENT_PROX_FAR:              next_transient = MOUTH_GOODBYE;          break;
+        case EVENT_MOTION_SHAKEN:         next_transient = MOUTH_SHAKEN;           break;
+        case EVENT_MOTION_PUT_DOWN:       next_transient = MOUTH_PUT_DOWN;         break;
         default: return;
     }
 

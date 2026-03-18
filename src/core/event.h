@@ -35,11 +35,18 @@ typedef enum {
     EVENT_SOUND_MUSIC_DETECTED,
     EVENT_SOUND_GENERAL_NOISE,
 
-    // Proximity related events 
+    // Proximity related events
 
     EVENT_PROX_FAR,
     EVENT_PROX_CLOSE,
-    EVENT_PROX_TOO_CLOSE
+    EVENT_PROX_TOO_CLOSE,
+
+    // Motion related events
+
+    EVENT_MOTION_SHAKEN,
+    EVENT_MOTION_PICKED_UP,
+    EVENT_MOTION_PUT_DOWN,
+    EVENT_MOTION_FLIPPED
 
 } EventType;
 

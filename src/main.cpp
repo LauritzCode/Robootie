@@ -20,6 +20,7 @@
 #include "interpreters/proximity_interpreter.h"
 #include "system/bluetooth.h"
 #include "actuators/drive.h"
+#include "sensors/mpu6050.h"
 
 
 
@@ -42,6 +43,7 @@ void setup(void)
     proximity_init();
     bluetooth_init();
     drive_init();
+    motion_sensor_init();
 }
 
 void loop(void)
@@ -64,4 +66,5 @@ void loop(void)
     proximity_update(now);
     bluetooth_update(now);
     drive_update(now);
+    motion_sensor_update(now);
 }

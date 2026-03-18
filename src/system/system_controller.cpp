@@ -18,6 +18,7 @@
 #include "interpreters/sound_interpreter.h"
 #include "interpreters/proximity_interpreter.h"
 #include "sensors/proximity_sensor.h"
+#include "sensors/mpu6050.h"
 
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
@@ -41,6 +42,10 @@ static ActionTimer too_close_timer;
 static ActionTimer lingering_timer;   // 30s nearby → uncomfortable
 static ActionTimer lingering_time_ms;
 static ActionTimer boredom_timer;     // 5min no change → bored
+static ActionTimer shake_timer;       // panic reaction window
+static ActionTimer pickup_timer;      // excitement while held
+static ActionTimer putdown_timer;     // brief sad after being set down
+static ActionTimer flip_timer;        // distress while upside down
 static bool quiet_prev = false;
 static bool boredom_triggered = false;
 
@@ -468,6 +473,54 @@ if (behavior == BEHAVIOR_BORED) {
     arms_intent.one_shot = false;
 }
     // --------------------------
+    // Motion reactions
+    // --------------------------
+    MotionFlags motion = motion_sensor_get_flags();
+
+    // Being shaken — panic
+    if (timer_active(&shake_timer, now_ms))
+    {
+        intent.base = EYES_BASE_AWAKE;
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_SAD;
+        intent.tremble = true;
+        arms_intent.pose = ARMS_SHIVER;
+        arms_intent.one_shot = false;
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_BRIEF_REACT;
+    }
+
+    // Being held / carried — happy and excited
+    if (timer_active(&pickup_timer, now_ms))
+    {
+        intent.base = EYES_BASE_AWAKE;
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_HAPPY;
+        arms_intent.pose = ARMS_WAVE;
+        arms_intent.one_shot = false;
+    }
+
+    // Just put down — brief sad (misses being held)
+    if (timer_active(&putdown_timer, now_ms))
+    {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_SAD;
+    }
+
+    // Upside down — very upset
+    if (motion.flipped || timer_active(&flip_timer, now_ms))
+    {
+        intent.base = EYES_BASE_AWAKE;
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_ANGRY;
+        intent.tremble = true;
+        arms_intent.pose = ARMS_SHIVER;
+        arms_intent.one_shot = false;
+        g_sound_intent.play = true;
+        g_sound_intent.pattern = SOUND_BRIEF_REACT;
+    }
+
+    // --------------------------
     // Physical modifiers
     // --------------------------
     intent.sweat = comfort.hot || comfort.overheated || emo.transient == TRANSIENT_STARTLED;
@@ -574,6 +627,36 @@ void system_controller_handle_event(const Event *event)
     boredom_triggered = false;
     behavior_fsm_set_state(BEHAVIOR_AWAKE);
     break;
+        case EVENT_MOTION_SHAKEN:
+            Serial.println("Ahh!! I'm being shaken!");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            timer_start(&shake_timer, event->timestamp_ms, 1500);
+            timer_start(&boredom_timer, event->timestamp_ms, 300000);
+            break;
+
+        case EVENT_MOTION_PICKED_UP:
+            Serial.println("Ooh, I'm being picked up!");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            timer_start(&pickup_timer, event->timestamp_ms, 5000);
+            timer_start(&boredom_timer, event->timestamp_ms, 300000);
+            break;
+
+        case EVENT_MOTION_PUT_DOWN:
+            Serial.println("Oh... put me down.");
+            timer_stop(&pickup_timer);
+            timer_start(&putdown_timer, event->timestamp_ms, 2000);
+            break;
+
+        case EVENT_MOTION_FLIPPED:
+            Serial.println("I'm upside down!! Fix me!!");
+            boredom_triggered = false;
+            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            timer_start(&flip_timer, event->timestamp_ms, 3000);
+            timer_start(&boredom_timer, event->timestamp_ms, 300000);
+            break;
+
         default:
             break;
     }

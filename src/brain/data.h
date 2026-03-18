@@ -599,3 +599,83 @@ static const LcdExpr bored_expressions[] PROGMEM = {
     {bo_45_1,bo_45_2},{bo_46_1,bo_46_2},{bo_47_1,bo_47_2},{bo_48_1,bo_48_2},{bo_49_1,bo_49_2},
 };
 #define BORED_EXPR_COUNT 50
+
+// ─────────────────────────────────────────────
+// SHAKEN (panic)
+// ─────────────────────────────────────────────
+static const char sk_0_1[] PROGMEM = "STOP!!!";         static const char sk_0_2[] PROGMEM = ">_<";
+static const char sk_1_1[] PROGMEM = "WHOA WHOA!!";     static const char sk_1_2[] PROGMEM = "STOP!!!";
+static const char sk_2_1[] PROGMEM = "AHHHHH!!";        static const char sk_2_2[] PROGMEM = "put me down!!";
+static const char sk_3_1[] PROGMEM = "dizzy dizzy";     static const char sk_3_2[] PROGMEM = ">_<";
+static const char sk_4_1[] PROGMEM = "my brain!!";      static const char sk_4_2[] PROGMEM = "its shaking!!";
+static const char sk_5_1[] PROGMEM = "STOP IT!!!";      static const char sk_5_2[] PROGMEM = "please!! >_<";
+static const char sk_6_1[] PROGMEM = "earthquake??";    static const char sk_6_2[] PROGMEM = "oh no :O";
+static const char sk_7_1[] PROGMEM = "make it stop";    static const char sk_7_2[] PROGMEM = "pls!! >_<";
+static const char sk_8_1[] PROGMEM = "everything";      static const char sk_8_2[] PROGMEM = "is spinning!!";
+static const char sk_9_1[] PROGMEM = "WHY!!!";          static const char sk_9_2[] PROGMEM = "just why >_<";
+
+static const LcdExpr shaken_expressions[] PROGMEM = {
+    {sk_0_1,sk_0_2},{sk_1_1,sk_1_2},{sk_2_1,sk_2_2},{sk_3_1,sk_3_2},{sk_4_1,sk_4_2},
+    {sk_5_1,sk_5_2},{sk_6_1,sk_6_2},{sk_7_1,sk_7_2},{sk_8_1,sk_8_2},{sk_9_1,sk_9_2},
+};
+#define SHAKEN_EXPR_COUNT 10
+
+// ─────────────────────────────────────────────
+// PICKED UP (excited)
+// ─────────────────────────────────────────────
+static const char pc_0_1[] PROGMEM = "ooh im flying!";  static const char pc_0_2[] PROGMEM = ":D";
+static const char pc_1_1[] PROGMEM = "im being held";   static const char pc_1_2[] PROGMEM = "yay!! :D";
+static const char pc_2_1[] PROGMEM = "so high up!";     static const char pc_2_2[] PROGMEM = "wheee :D";
+static const char pc_3_1[] PROGMEM = "i love this";     static const char pc_3_2[] PROGMEM = "^_^";
+static const char pc_4_1[] PROGMEM = "hold me more!";   static const char pc_4_2[] PROGMEM = ":D";
+static const char pc_5_1[] PROGMEM = "dont drop me!";   static const char pc_5_2[] PROGMEM = ":o";
+static const char pc_6_1[] PROGMEM = "up up up!!";      static const char pc_6_2[] PROGMEM = ":D";
+static const char pc_7_1[] PROGMEM = "adventure!!";     static const char pc_7_2[] PROGMEM = "lets go!! :D";
+static const char pc_8_1[] PROGMEM = "carried :D";      static const char pc_8_2[] PROGMEM = "this is nice";
+static const char pc_9_1[] PROGMEM = "i feel free!!";   static const char pc_9_2[] PROGMEM = ":D";
+
+static const LcdExpr picked_up_expressions[] PROGMEM = {
+    {pc_0_1,pc_0_2},{pc_1_1,pc_1_2},{pc_2_1,pc_2_2},{pc_3_1,pc_3_2},{pc_4_1,pc_4_2},
+    {pc_5_1,pc_5_2},{pc_6_1,pc_6_2},{pc_7_1,pc_7_2},{pc_8_1,pc_8_2},{pc_9_1,pc_9_2},
+};
+#define PICKED_UP_EXPR_COUNT 10
+
+// ─────────────────────────────────────────────
+// PUT DOWN (sad, brief)
+// ─────────────────────────────────────────────
+static const char pd_0_1[] PROGMEM = "nooo come back"; static const char pd_0_2[] PROGMEM = ":(";
+static const char pd_1_1[] PROGMEM = "i miss being";   static const char pd_1_2[] PROGMEM = "held... :(";
+static const char pd_2_1[] PROGMEM = "already?? :(";   static const char pd_2_2[] PROGMEM = "so soon...";
+static const char pd_3_1[] PROGMEM = "back to desk";   static const char pd_3_2[] PROGMEM = "life... :(";
+static const char pd_4_1[] PROGMEM = "that was short"; static const char pd_4_2[] PROGMEM = ":(";
+static const char pd_5_1[] PROGMEM = "pick me up";     static const char pd_5_2[] PROGMEM = "again!! :(";
+static const char pd_6_1[] PROGMEM = "lonely now...";  static const char pd_6_2[] PROGMEM = ":(";
+static const char pd_7_1[] PROGMEM = "oh... ok :(";    static const char pd_7_2[] PROGMEM = "ill be fine";
+static const char pd_8_1[] PROGMEM = "put down like";  static const char pd_8_2[] PROGMEM = "a bag :( rude";
+static const char pd_9_1[] PROGMEM = "freedom gone";   static const char pd_9_2[] PROGMEM = ":(";
+
+static const LcdExpr put_down_expressions[] PROGMEM = {
+    {pd_0_1,pd_0_2},{pd_1_1,pd_1_2},{pd_2_1,pd_2_2},{pd_3_1,pd_3_2},{pd_4_1,pd_4_2},
+    {pd_5_1,pd_5_2},{pd_6_1,pd_6_2},{pd_7_1,pd_7_2},{pd_8_1,pd_8_2},{pd_9_1,pd_9_2},
+};
+#define PUT_DOWN_EXPR_COUNT 10
+
+// ─────────────────────────────────────────────
+// FLIPPED (upside down, distressed)
+// ─────────────────────────────────────────────
+static const char fp_0_1[] PROGMEM = "UPSIDE DOWN";    static const char fp_0_2[] PROGMEM = ">_<";
+static const char fp_1_1[] PROGMEM = "HELP!!! :O";     static const char fp_1_2[] PROGMEM = "im flipped!!";
+static const char fp_2_1[] PROGMEM = "WRONG WAY!!";    static const char fp_2_2[] PROGMEM = "fix me!! >_<";
+static const char fp_3_1[] PROGMEM = "blood rush!!";   static const char fp_3_2[] PROGMEM = ">_<";
+static const char fp_4_1[] PROGMEM = "not comfy!!";    static const char fp_4_2[] PROGMEM = "flip me back!";
+static const char fp_5_1[] PROGMEM = "everything";     static const char fp_5_2[] PROGMEM = "is wrong!! >_<";
+static const char fp_6_1[] PROGMEM = "THE CEILING";    static const char fp_6_2[] PROGMEM = "is the floor??";
+static const char fp_7_1[] PROGMEM = "gravity why";    static const char fp_7_2[] PROGMEM = ">_<";
+static const char fp_8_1[] PROGMEM = "this is fine";   static const char fp_8_2[] PROGMEM = "NO ITS NOT!!";
+static const char fp_9_1[] PROGMEM = "TURN ME OVER";   static const char fp_9_2[] PROGMEM = "please!! >_<";
+
+static const LcdExpr flipped_expressions[] PROGMEM = {
+    {fp_0_1,fp_0_2},{fp_1_1,fp_1_2},{fp_2_1,fp_2_2},{fp_3_1,fp_3_2},{fp_4_1,fp_4_2},
+    {fp_5_1,fp_5_2},{fp_6_1,fp_6_2},{fp_7_1,fp_7_2},{fp_8_1,fp_8_2},{fp_9_1,fp_9_2},
+};
+#define FLIPPED_EXPR_COUNT 10
