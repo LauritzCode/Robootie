@@ -34,7 +34,7 @@ void proximity_update(uint32_t now_ms) {
     if (behavior_state == BEHAVIOR_ASLEEP) return;
 
     uint32_t interval = 1000;
-    if (behavior_context == CONTEXT_LISTENING || proximity_state == PROXIMITY_NEARBY || proximity_state == PROXIMITY_TOO_CLOSE)
+    if (behavior_context == CONTEXT_LISTENING || proximity_state == PROXIMITY_NEARBY)
         interval = 200;
 
     if (now_ms - last_read_time < interval) return;
@@ -42,34 +42,28 @@ void proximity_update(uint32_t now_ms) {
 
     uint16_t distance = lox.readRange();
 
-    // determine new state first
+    // TOO_CLOSE zone removed — everything within PROX_CLOSE is just NEARBY.
+    // Hysteresis: once NEARBY, must exceed PROX_NEARBY_EXIT to become FAR.
     ProximityState new_state;
-    if (distance < PROX_TOO_CLOSE)
-        new_state = PROXIMITY_TOO_CLOSE;
-    else if (distance < PROX_CLOSE)
+    if (distance < PROX_CLOSE)
+        new_state = PROXIMITY_NEARBY;
+    else if (proximity_state == PROXIMITY_NEARBY && distance < PROX_NEARBY_EXIT)
         new_state = PROXIMITY_NEARBY;
     else
         new_state = PROXIMITY_FAR;
 
-    // only fire event on transition
+    // 20-second lockout between any state change — prevents sensor noise oscillation
     if (new_state != proximity_state) {
-    if (now_ms - last_transition_time >= 2000) {
-        last_transition_time = now_ms;
-        proximity_state = new_state;
+        if (now_ms - last_transition_time >= 20000) {
+            last_transition_time = now_ms;
+            proximity_state = new_state;
 
-        Event e;
-        e.timestamp_ms = now_ms;
-        e.value = distance;
+            Event e;
+            e.timestamp_ms = now_ms;
+            e.value = distance;
+            e.type = (new_state == PROXIMITY_NEARBY) ? EVENT_PROX_CLOSE : EVENT_PROX_FAR;
 
-        if (new_state == PROXIMITY_TOO_CLOSE) {
-            e.type = EVENT_PROX_TOO_CLOSE;
-        } else if (new_state == PROXIMITY_NEARBY) {
-            e.type = EVENT_PROX_CLOSE;
-        } else {
-            e.type = EVENT_PROX_FAR;
+            event_queue_push(e);
         }
-
-        event_queue_push(e);
     }
-}
 }

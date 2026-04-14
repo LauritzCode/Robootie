@@ -5,7 +5,7 @@
 #include "actuators/drive.h"
 
 
-static uint8_t current_speed = 0;
+static uint8_t current_speed = 180;  // ~70% — enough to move on startup, tune as needed
 
 void bluetooth_init(void) {
     Serial1.begin(9600);
@@ -54,24 +54,36 @@ static void bluetooth_handle_cmd(unsigned char cmd, uint32_t now_ms) {
         break;
 
         case CMD_DRIVE_FORWARD:
-    bluetooth_drive(DRIVE_FORWARD, current_speed);
-    break;
-    case CMD_DRIVE_BACKWARD:
-        bluetooth_drive(DRIVE_BACKWARD, current_speed);
-        break;
-    case CMD_DRIVE_STOP:
-        current_speed = 0;
-        bluetooth_drive(DRIVE_STOP, 0);
-        break;
-    case CMD_DRIVE_BRAKE:
-        bluetooth_drive(DRIVE_BRAKE, 255);
-        break;
-    case CMD_DRIVE_SPEED_UP:
-        if (current_speed <= 245) current_speed += 10;
-        bluetooth_drive(DRIVE_FORWARD, current_speed);
-        Serial.print("Speed: ");
-        Serial.println(current_speed);
-        break;
+            bluetooth_drive(DRIVE_FORWARD, current_speed);
+            break;
+        case CMD_DRIVE_BACKWARD:
+            bluetooth_drive(DRIVE_BACKWARD, current_speed);
+            break;
+        case CMD_DRIVE_LEFT:
+            bluetooth_drive(DRIVE_LEFT, current_speed);
+            break;
+        case CMD_DRIVE_RIGHT:
+            bluetooth_drive(DRIVE_RIGHT, current_speed);
+            break;
+        case CMD_DRIVE_STOP:
+            bluetooth_drive(DRIVE_STOP, 0);
+            break;
+        case CMD_DRIVE_BRAKE:
+            bluetooth_drive(DRIVE_BRAKE, 255);
+            break;
+        case CMD_DRIVE_SPEED_UP:
+            if (current_speed <= 245) current_speed += 10;
+            Serial.print("Speed: "); Serial.println(current_speed);
+            break;
+        case CMD_DRIVE_SPEED_DOWN:
+            if (current_speed >= 10) current_speed -= 10;
+            Serial.print("Speed: "); Serial.println(current_speed);
+            break;
+
+        case CMD_TEST_FL: drive_test_motor(0, 180); break;
+        case CMD_TEST_FR: drive_test_motor(1, 180); break;
+        case CMD_TEST_RL: drive_test_motor(2, 180); break;
+        case CMD_TEST_RR: drive_test_motor(3, 180); break;
         default:
         break;
     }

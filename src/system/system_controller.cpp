@@ -52,6 +52,7 @@ static bool boredom_triggered = false;
 static bool conversation_sound_played = false;
 static bool goodbye_sound_played = false;
 static bool lingering_sound_played = false;
+static uint32_t last_goodbye_time = 0;
 
 
 BehaviorContext system_controller_get_context(void) {
@@ -125,20 +126,8 @@ void system_controller_update(uint32_t now_ms)
 
     last_transient = emo.transient;
 
-    if (proximity.nearby || proximity.too_close)
+    if (proximity.nearby)
         timer_start(&someone_present_timer, now_ms, 60000);
-
-    if (proximity.too_close) {
-        intent.override_mood = true;
-        intent.mood = EYES_MOOD_SAD;
-        intent.tremble = true;
-        arms_intent.pose = ARMS_ATTACK;
-        arms_intent.one_shot = false;
-    if (timer_active(&too_close_timer, now_ms)) {
-        g_sound_intent.play = true;
-        g_sound_intent.pattern = SOUND_BRIEF_REACT;
-    }
-}
 
     if (timer_active(&goodbye_timer, now_ms)) {
     intent.override_mood = true;
@@ -156,7 +145,7 @@ if (!timer_active(&goodbye_timer, now_ms)) {
     goodbye_sound_played = false;
 }
 
-if((!timer_active(&lingering_timer, now_ms) && proximity.nearby) || (!timer_active(&lingering_timer, now_ms) && proximity.too_close)) {
+if (!timer_active(&lingering_timer, now_ms) && proximity.nearby) {
     current_context = CONTEXT_LINGERING;
     timer_start(&lingering_time_ms, now_ms, 3000);
     intent.override_mood = true;
@@ -603,7 +592,10 @@ void system_controller_handle_event(const Event *event)
 
         case EVENT_PROX_FAR:
             last_proximity = PROXIMITY_FAR;
-            timer_start(&goodbye_timer, event->timestamp_ms, 3000);
+            if ((event->timestamp_ms - last_goodbye_time) >= GOODBYE_COOLDOWN_MS) {
+                timer_start(&goodbye_timer, event->timestamp_ms, 8000);
+                last_goodbye_time = event->timestamp_ms;
+            }
             timer_start(&boredom_timer, event->timestamp_ms, 300000);
             timer_stop(&lingering_timer);
             break;
@@ -620,13 +612,6 @@ void system_controller_handle_event(const Event *event)
     behavior_fsm_set_state(BEHAVIOR_AWAKE);  
     break;
 
-    case EVENT_PROX_TOO_CLOSE:
-    last_proximity = PROXIMITY_TOO_CLOSE;
-    timer_start(&too_close_timer, event->timestamp_ms, 2000);
-    timer_start(&boredom_timer, event->timestamp_ms, 300000);
-    boredom_triggered = false;
-    behavior_fsm_set_state(BEHAVIOR_AWAKE);
-    break;
         case EVENT_MOTION_SHAKEN:
             Serial.println("Ahh!! I'm being shaken!");
             boredom_triggered = false;

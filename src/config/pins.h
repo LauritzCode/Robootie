@@ -9,12 +9,21 @@
 #define RIGHT_ARM 9
 
 
-// motors 
+// motors — TB6612FNG, STBY tied to 5V on both drivers
 
+// Driver 1 — front wheels
+#define MOTOR_FL_PWM   4    // PWMA
+#define MOTOR_FL_IN1   23   // AIN1
+#define MOTOR_FL_IN2   25   // AIN2
+#define MOTOR_FR_PWM   5    // PWMB
+#define MOTOR_FR_IN1   29   // BIN1
+#define MOTOR_FR_IN2   31   // BIN2
 
-// Motor 1 (wheel A)
-#define MOTOR_A_PWM   4
-#define MOTOR_A_IN1   23
-#define MOTOR_A_IN2   25
-#define MOTOR_A_STBY  27
+// Driver 2 — rear wheels
+#define MOTOR_RL_PWM   6    // PWMA
+#define MOTOR_RL_IN1   33   // AIN1
+#define MOTOR_RL_IN2   35   // AIN2
+#define MOTOR_RR_PWM   7    // PWMB
+#define MOTOR_RR_IN1   39   // BIN1
+#define MOTOR_RR_IN2   41   // BIN2
 
