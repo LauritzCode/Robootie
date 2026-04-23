@@ -5,7 +5,7 @@
 static DriveIntent current_intent = {DRIVE_STOP, 0};
 static bool test_mode = false;
 static uint32_t last_intent_ms = 0;
-static const uint32_t DRIVE_WATCHDOG_MS = 300;
+static const uint32_t DRIVE_WATCHDOG_MS = 3000;
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -54,8 +54,10 @@ void drive_init(void) {
 
 void drive_update(uint32_t now_ms) {
     if (test_mode) return;
+    uint32_t now = millis();
     if (current_intent.direction != DRIVE_STOP &&
-        (now_ms - last_intent_ms) > DRIVE_WATCHDOG_MS) {
+        (now - last_intent_ms) > DRIVE_WATCHDOG_MS) {
+        Serial.println("[DRIVE] watchdog fired -> STOP");
         current_intent.direction = DRIVE_STOP;
         current_intent.speed = 0;
     }
@@ -102,6 +104,7 @@ void drive_set_intent(const DriveIntent *intent) {
     test_mode = false;
     current_intent = *intent;
     last_intent_ms = millis();
+    Serial.print("[DRIVE] intent set: dir="); Serial.print(intent->direction); Serial.print(" spd="); Serial.println(intent->speed);
 }
 
 void drive_test_motor(uint8_t which, uint8_t speed) {

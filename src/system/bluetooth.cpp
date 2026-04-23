@@ -100,8 +100,10 @@ void bluetooth_update(uint32_t now_ms) {
             awaiting_cmd = true;
         } else if (awaiting_cmd) {
             awaiting_cmd = false;
+            Serial.print("[BT] cmd: 0x"); Serial.print(byte, HEX); Serial.print(" '"); Serial.print((char)byte); Serial.println("'");
             bluetooth_handle_cmd(byte, now_ms);
+        } else {
+            Serial.print("[BT] dropped: 0x"); Serial.println(byte, HEX);
         }
-        // lone bytes with no prefix are silently dropped — prevents noise from triggering drive
     }
 }
