@@ -3,6 +3,9 @@
 #include "config/pins.h"
 
 static DriveIntent current_intent = {DRIVE_STOP, 0};
+static bool test_mode = false;
+static uint32_t last_intent_ms = 0;
+static const uint32_t DRIVE_WATCHDOG_MS = 300;
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -50,6 +53,12 @@ void drive_init(void) {
 }
 
 void drive_update(uint32_t now_ms) {
+    if (test_mode) return;
+    if (current_intent.direction != DRIVE_STOP &&
+        (now_ms - last_intent_ms) > DRIVE_WATCHDOG_MS) {
+        current_intent.direction = DRIVE_STOP;
+        current_intent.speed = 0;
+    }
     uint8_t s = current_intent.speed;
     switch (current_intent.direction) {
         case DRIVE_FORWARD:
@@ -90,11 +99,14 @@ void drive_update(uint32_t now_ms) {
 void drive_handle_event(const Event *event) {}
 
 void drive_set_intent(const DriveIntent *intent) {
+    test_mode = false;
     current_intent = *intent;
+    last_intent_ms = millis();
 }
 
 void drive_test_motor(uint8_t which, uint8_t speed) {
-    // stop all motors first so only the target one runs
+    test_mode = true;  // freeze drive_update() until next drive_set_intent() call
+
     motor_stop(MOTOR_FL_PWM, MOTOR_FL_IN1, MOTOR_FL_IN2);
     motor_stop(MOTOR_FR_PWM, MOTOR_FR_IN1, MOTOR_FR_IN2);
     motor_stop(MOTOR_RL_PWM, MOTOR_RL_IN1, MOTOR_RL_IN2);
@@ -106,7 +118,4 @@ void drive_test_motor(uint8_t which, uint8_t speed) {
         case 2: motor_run(MOTOR_RL_PWM, MOTOR_RL_IN1, MOTOR_RL_IN2, true, speed); Serial.println("TEST: RL (Driver2 MotorA)"); break;
         case 3: motor_run(MOTOR_RR_PWM, MOTOR_RR_IN1, MOTOR_RR_IN2, true, speed); Serial.println("TEST: RR (Driver2 MotorB)"); break;
     }
-
-    // keep current_intent as STOP so drive_update() doesn't override the test
-    current_intent = {DRIVE_STOP, 0};
 }

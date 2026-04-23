@@ -2,6 +2,10 @@
 #include "core/event.h"
 #include <stdint.h>
 
+// Every command must be preceded by this byte so single noise bytes can't trigger actions.
+// Send '!' + command_char from your app for all commands.
+#define CMD_PREFIX         '!'
+
 #define CMD_SIM_NOISE      '1'
 #define CMD_SIM_BURST      '2'
 #define CMD_SIM_BORED      '3'

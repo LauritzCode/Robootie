@@ -6,6 +6,7 @@
 
 
 static uint8_t current_speed = 180;  // ~70% — enough to move on startup, tune as needed
+static bool awaiting_cmd = false;    // true after receiving CMD_PREFIX '!'
 
 void bluetooth_init(void) {
     Serial1.begin(9600);
@@ -90,8 +91,17 @@ static void bluetooth_handle_cmd(unsigned char cmd, uint32_t now_ms) {
 }
 
 void bluetooth_update(uint32_t now_ms) {
-    if (Serial1.available()) {
-        unsigned char cmd = Serial1.read();
-        bluetooth_handle_cmd(cmd, now_ms);
+    while (Serial1.available()) {
+        unsigned char byte = Serial1.read();
+
+        if (now_ms < 3000) continue;  // discard BT module startup bytes
+
+        if (byte == CMD_PREFIX) {
+            awaiting_cmd = true;
+        } else if (awaiting_cmd) {
+            awaiting_cmd = false;
+            bluetooth_handle_cmd(byte, now_ms);
+        }
+        // lone bytes with no prefix are silently dropped — prevents noise from triggering drive
     }
 }

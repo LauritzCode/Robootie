@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Wire.h>
 
 #include "core/event_queue.h"
 #include "core/event_dispatcher.h"
@@ -26,6 +27,9 @@
 
 void setup(void)
 {
+    drive_init();  // must be first — STBY is tied to 5V so driver is live on power-on;
+                   // floating IN pins cause random motor movement until we drive them LOW
+
     Serial.begin(9600);
 
     event_queue_init();
@@ -42,8 +46,8 @@ void setup(void)
     arms_init();
     proximity_init();
     bluetooth_init();
-    drive_init();
     motion_sensor_init();
+    Wire.setWireTimeout(3000, true);  // 3ms I2C timeout; resets bus on hang from motor noise
 }
 
 void loop(void)
@@ -59,7 +63,7 @@ void loop(void)
     // buzzer_apply_intent(system_controller_get_sound_intent()); // DISABLED: silenced for testing
     sound_interpreter_update(now);
     // buzzer_update(now); // DISABLED: silenced for testing
-    sound_sensor_update(now);
+   // sound_sensor_update(now);
     eyes_update(now);
     mouth_update(now);
     arms_update(now);

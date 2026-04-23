@@ -13,8 +13,8 @@
 
 // Driver 1 — front wheels
 #define MOTOR_FL_PWM   4    // PWMA
-#define MOTOR_FL_IN1   23   // AIN1
-#define MOTOR_FL_IN2   25   // AIN2
+#define MOTOR_FL_IN1   25   // swapped: motor wired with reversed polarity
+#define MOTOR_FL_IN2   23
 #define MOTOR_FR_PWM   5    // PWMB
 #define MOTOR_FR_IN1   29   // BIN1
 #define MOTOR_FR_IN2   31   // BIN2
