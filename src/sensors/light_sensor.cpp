@@ -104,3 +104,7 @@ void light_sensor_update(uint32_t now_ms)
         current_light_state = new_state;
     }
 }
+
+int light_sensor_read_raw(void) {
+    return analogRead(LIGHT_SENSOR_PIN);
+}

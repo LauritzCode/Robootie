@@ -86,3 +86,7 @@ void temp_sensor_update(uint32_t now_ms) {
 TempState temp_sensor_get_state(void) {
     return current_state;
 }
+
+float temp_sensor_read_celsius(void) {
+    return temp_detect();
+}

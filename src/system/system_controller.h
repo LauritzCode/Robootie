@@ -22,3 +22,4 @@ void system_controller_update(uint32_t now_ms);
 void system_controller_handle_event(const Event *event);
 
 BehaviorContext system_controller_get_context(void);
+bool system_controller_is_woken_angry(uint32_t now_ms);

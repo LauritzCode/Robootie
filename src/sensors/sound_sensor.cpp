@@ -128,3 +128,7 @@ void sound_sensor_update(uint32_t now_ms)
         peak_max_value = 0;
     }
 }
+
+int sound_sensor_read_raw(void) {
+    return analogRead(AUDIO_ANALOG_PIN);
+}

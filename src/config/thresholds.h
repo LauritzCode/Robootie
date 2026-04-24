@@ -35,10 +35,19 @@ Default brightness is about 230-240. Point a light directly and it goes to 40 or
  #define EYE_BASE_WIDTH 36
 
  // Proximity configs
+ /*
+  Hardware limits (VL53L0X mounted on Robootie's front):
+    350mm — absolute maximum reliable detection range; anything beyond reads as noise/max
+     85mm — physical crash threshold; object is right at the bumper, imminent collision
+    150mm — "looking distance": natural curiosity zone — close enough to inspect,
+             far enough to react. Useful for autonomous drive behaviours:
+             stop & look, back away to inspect, or hold distance from a person.
+  */
 
  #define PROX_TOO_FAR 500
  #define PROX_CLOSE 200         // enter "nearby" when closer than this (mm)
  #define PROX_NEARBY_EXIT 350   // exit "nearby" → FAR only when further than this (hysteresis)
- #define PROX_TOO_CLOSE 150
+ #define PROX_TOO_CLOSE 100      // crash zone — stop immediately when driving autonomously
+ #define PROX_CURIOSITY 150     // curiosity/inspect distance for autonomous behaviour
 
- #define GOODBYE_COOLDOWN_MS 20000  // min ms between goodbye reactions
+ #define GOODBYE_COOLDOWN_MS 8000   // min ms between goodbye reactions

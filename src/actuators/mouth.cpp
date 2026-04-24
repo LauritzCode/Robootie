@@ -48,7 +48,8 @@ typedef enum {
     MOUTH_SHAKEN,
     MOUTH_PICKED_UP,
     MOUTH_PUT_DOWN,
-    MOUTH_FLIPPED
+    MOUTH_FLIPPED,
+    MOUTH_ANGRY
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -141,6 +142,9 @@ static void render(MouthDisplay d) {
             break;
         case MOUTH_FLIPPED:
             render_expr(flipped_expressions, FLIPPED_EXPR_COUNT);
+            break;
+        case MOUTH_ANGRY:
+            render_expr(angry_expressions, ANGRY_EXPR_COUNT);
             break;
         default:
             lcd.clear();
@@ -242,6 +246,16 @@ void mouth_update(uint32_t now_ms) {
                 if (sound.music) desired = MOUTH_MUSIC;
             }
         }
+    }
+
+    // Angry override — cycles a new phrase every 10s while angry timers are active
+    static uint32_t angry_cycle_ms = 0;
+    if (system_controller_is_woken_angry(now_ms)) {
+        if (now_ms - angry_cycle_ms >= 10000) {
+            angry_cycle_ms = now_ms;
+            g_current = MOUTH_IDLE;  // force re-render even if already in MOUTH_ANGRY
+        }
+        desired = MOUTH_ANGRY;
     }
 
     // 4. apply — clears automatically when state changes to MOUTH_IDLE

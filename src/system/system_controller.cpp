@@ -46,6 +46,10 @@ static ActionTimer shake_timer;       // panic reaction window
 static ActionTimer pickup_timer;      // excitement while held
 static ActionTimer putdown_timer;     // brief sad after being set down
 static ActionTimer flip_timer;        // distress while upside down
+static ActionTimer burst_angry_timer; // 1 min anger after burst wake
+static ActionTimer woken_angry_timer; // 15s anger after normal sound wake (50% chance)
+static uint8_t sleep_disturbance_count = 0;
+static uint8_t sleep_wake_threshold   = 3;
 static bool quiet_prev = false;
 static bool boredom_triggered = false;
 
@@ -59,6 +63,10 @@ BehaviorContext system_controller_get_context(void) {
     return current_context;
 }
 
+bool system_controller_is_woken_angry(uint32_t now_ms) {
+    return timer_active(&burst_angry_timer, now_ms) || timer_active(&woken_angry_timer, now_ms);
+}
+
 const SoundIntent* system_controller_get_sound_intent(void)
 {
     return &g_sound_intent;
@@ -67,7 +75,7 @@ const SoundIntent* system_controller_get_sound_intent(void)
 
 void system_controller_init(void)
 {
-    timer_start(&boredom_timer, millis(), 300000);
+    timer_start(&boredom_timer, millis(), 120000);
 }
 
 void system_controller_update(uint32_t now_ms)
@@ -446,11 +454,9 @@ if (timer_active(&boredom_timer, now_ms)) {
 
 
 if(boredom_triggered) {
-    if(chance_percent(80)) {
-        behavior_fsm_set_state(BEHAVIOR_BORED);
-    } else {
-        behavior_fsm_set_state(BEHAVIOR_ASLEEP);
-    }
+    behavior_fsm_set_state(BEHAVIOR_ASLEEP);
+    sleep_disturbance_count = 0;
+    sleep_wake_threshold = (uint8_t)random(1, 6); // 1–5 disturbances needed to wake
 }
 
 
@@ -509,6 +515,15 @@ if (behavior == BEHAVIOR_BORED) {
         g_sound_intent.pattern = SOUND_BRIEF_REACT;
     }
 
+    // Anger from being woken — burst: 1 min, grumpy normal wake: 15s
+    if (timer_active(&burst_angry_timer, now_ms) || timer_active(&woken_angry_timer, now_ms)) {
+        intent.base = EYES_BASE_AWAKE;
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_ANGRY;
+        arms_intent.pose = ARMS_ATTACK;
+        arms_intent.one_shot = false;
+    }
+
     // --------------------------
     // Physical modifiers
     // --------------------------
@@ -562,32 +577,71 @@ void system_controller_handle_event(const Event *event)
             Serial.println("Controller: exited COLD");
             break;
 
-        case EVENT_SOUND_MUSIC_DETECTED: 
+        case EVENT_SOUND_MUSIC_DETECTED:
             Serial.println("Oh? is music?");
             boredom_triggered = false;
-            behavior_fsm_set_state(BEHAVIOR_AWAKE);
-            break;  
-            
+            if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
+                sleep_disturbance_count++;
+                if (sleep_disturbance_count >= sleep_wake_threshold) {
+                    sleep_disturbance_count = 0;
+                    behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                    timer_start(&boredom_timer, event->timestamp_ms, 120000);
+                    if (chance_percent(50)) timer_start(&woken_angry_timer, event->timestamp_ms, 15000);
+                }
+            } else {
+                behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                timer_start(&boredom_timer, event->timestamp_ms, 120000);
+            }
+            break;
+
         case EVENT_SOUND_PEAK:
-           // Serial.println("PEAK");
             break;
 
         case EVENT_SOUND_BURST:
             Serial.println("BURST");
             boredom_triggered = false;
-            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
+                sleep_disturbance_count = 0;
+                behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                timer_start(&burst_angry_timer, event->timestamp_ms, 60000);
+            } else {
+                behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            }
+            timer_start(&boredom_timer, event->timestamp_ms, 120000);
             break;
 
         case EVENT_SOUND_GENERAL_NOISE:
             Serial.println("NOISY!!");
             boredom_triggered = false;
-            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
+                sleep_disturbance_count++;
+                if (sleep_disturbance_count >= sleep_wake_threshold) {
+                    sleep_disturbance_count = 0;
+                    behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                    timer_start(&boredom_timer, event->timestamp_ms, 120000);
+                    if (chance_percent(50)) timer_start(&woken_angry_timer, event->timestamp_ms, 15000);
+                }
+            } else {
+                behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                timer_start(&boredom_timer, event->timestamp_ms, 120000);
+            }
             break;
 
         case EVENT_SOUND_TALKING:
             Serial.println("Is talking?");
             boredom_triggered = false;
-            behavior_fsm_set_state(BEHAVIOR_AWAKE);
+            if (behavior_fsm_get_state() == BEHAVIOR_ASLEEP) {
+                sleep_disturbance_count++;
+                if (sleep_disturbance_count >= sleep_wake_threshold) {
+                    sleep_disturbance_count = 0;
+                    behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                    timer_start(&boredom_timer, event->timestamp_ms, 120000);
+                    if (chance_percent(50)) timer_start(&woken_angry_timer, event->timestamp_ms, 15000);
+                }
+            } else {
+                behavior_fsm_set_state(BEHAVIOR_AWAKE);
+                timer_start(&boredom_timer, event->timestamp_ms, 120000);
+            }
             break;
 
         case EVENT_PROX_FAR:

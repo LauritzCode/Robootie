@@ -34,11 +34,11 @@ void setup(void)
 
     event_queue_init();
     behavior_fsm_init();
-    light_sensor_init();
-    // temp_sensor_init();       // DISABLED: temp sensor readings unreliable on hardware
+    // light_sensor_init();      // DISABLED: sensor hardware fault (floating pin)
+    // temp_sensor_init();       // DISABLED: sensor hardware fault
     sound_sensor_init();
     system_controller_init();
-    light_interpreter_init();
+    // light_interpreter_init(); // DISABLED: light sensor hardware fault
     // comfort_interpreter_init(); // DISABLED: temp sensor readings unreliable on hardware
     proximity_interpreter_init();
     eyes_init();
@@ -47,23 +47,24 @@ void setup(void)
     proximity_init();
     bluetooth_init();
     motion_sensor_init();
-    Wire.setWireTimeout(3000, true);  // 3ms I2C timeout; resets bus on hang from motor noise
+    Wire.setWireTimeout(25000, true);  // 25ms I2C timeout — long enough to not fire during normal LCD writes
 }
 
 void loop(void)
 {
     uint32_t now = millis();
-    light_sensor_update(now);
-    // temp_sensor_update(now);       // DISABLED: temp sensor readings unreliable on hardware
+
+    // light_sensor_update(now);      // DISABLED: sensor hardware fault
+    // temp_sensor_update(now);       // DISABLED: sensor hardware fault
     dispatch_events();
     emotion_interpreter_update(now);
-    // comfort_interpreter_update(now); // DISABLED: temp sensor readings unreliable on hardware
-    light_interpreter_update(now);
+    // comfort_interpreter_update(now); // DISABLED: temp sensor hardware fault
+    // light_interpreter_update(now); // DISABLED: light sensor hardware fault
     system_controller_update(now);
-    // buzzer_apply_intent(system_controller_get_sound_intent()); // DISABLED: silenced for testing
+    buzzer_apply_intent(system_controller_get_sound_intent()); // DISABLED: silenced for testing
     sound_interpreter_update(now);
-    // buzzer_update(now); // DISABLED: silenced for testing
-   // sound_sensor_update(now);
+    buzzer_update(now); // DISABLED: silenced for testing
+    sound_sensor_update(now);
     eyes_update(now);
     mouth_update(now);
     arms_update(now);

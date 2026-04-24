@@ -679,3 +679,23 @@ static const LcdExpr flipped_expressions[] PROGMEM = {
     {fp_5_1,fp_5_2},{fp_6_1,fp_6_2},{fp_7_1,fp_7_2},{fp_8_1,fp_8_2},{fp_9_1,fp_9_2},
 };
 #define FLIPPED_EXPR_COUNT 10
+
+// ─────────────────────────────────────────────
+// ANGRY (woken up — cycles every ~10s during angry timer)
+// ─────────────────────────────────────────────
+static const char an_0_1[] PROGMEM = "I ATTACK!";       static const char an_0_2[] PROGMEM = ">:(";
+static const char an_1_1[] PROGMEM = "am angy >:(";     static const char an_1_2[] PROGMEM = "";
+static const char an_2_1[] PROGMEM = "I WAS SLEEPING";  static const char an_2_2[] PROGMEM = ">:(";
+static const char an_3_1[] PROGMEM = "how DARE you";    static const char an_3_2[] PROGMEM = ">:(";
+static const char an_4_1[] PROGMEM = "SO RUDE.";        static const char an_4_2[] PROGMEM = "grrrr...";
+static const char an_5_1[] PROGMEM = "LEAVE ME ALONE";  static const char an_5_2[] PROGMEM = "!!!";
+static const char an_6_1[] PROGMEM = "you're in";       static const char an_6_2[] PROGMEM = "big trouble";
+static const char an_7_1[] PROGMEM = "the NERVE";       static const char an_7_2[] PROGMEM = "of it >:(";
+static const char an_8_1[] PROGMEM = "WHY. just WHY";   static const char an_8_2[] PROGMEM = "";
+static const char an_9_1[] PROGMEM = "do NOT";          static const char an_9_2[] PROGMEM = "test me >:(";
+
+static const LcdExpr angry_expressions[] PROGMEM = {
+    {an_0_1,an_0_2},{an_1_1,an_1_2},{an_2_1,an_2_2},{an_3_1,an_3_2},{an_4_1,an_4_2},
+    {an_5_1,an_5_2},{an_6_1,an_6_2},{an_7_1,an_7_2},{an_8_1,an_8_2},{an_9_1,an_9_2},
+};
+#define ANGRY_EXPR_COUNT 10

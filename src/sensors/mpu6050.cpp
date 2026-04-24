@@ -40,6 +40,7 @@ static bool     pickup_candidate = false;
 static uint32_t pickup_start_ms  = 0;
 static uint32_t last_shake_ms    = 0;
 static uint32_t last_pickup_ms   = 0;
+static uint32_t last_putdown_ms  = 0;
 static uint32_t last_read_ms     = 0;
 
 static inline float vec_mag(float x, float y, float z)
@@ -134,8 +135,9 @@ void motion_sensor_update(uint32_t now_ms)
             event_queue_push(e);
         }
     } else {
-        if (flags.picked_up) {
+        if (flags.picked_up && (now_ms - last_putdown_ms > 2000)) {
             flags.picked_up = false;
+            last_putdown_ms = now_ms;
             Event e;
             e.type         = EVENT_MOTION_PUT_DOWN;
             e.timestamp_ms = now_ms;
