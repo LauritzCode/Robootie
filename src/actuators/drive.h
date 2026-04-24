@@ -19,6 +19,8 @@ void drive_init(void);
 void drive_update(uint32_t now_ms);
 void drive_handle_event(const Event *event);
 void drive_set_intent(const DriveIntent *intent);
+DriveDirection drive_get_direction(void);
+bool drive_is_manual_active(uint32_t now_ms);
 
 // Test one motor in isolation at a fixed speed (0=FL, 1=FR, 2=RL, 3=RR)
 void drive_test_motor(uint8_t which, uint8_t speed);

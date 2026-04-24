@@ -17,6 +17,7 @@
 #include "brain/data.h"
 #include "interpreters/sound_interpreter.h"
 #include "sensors/mpu6050.h"
+#include "actuators/drive.h"
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
@@ -49,7 +50,8 @@ typedef enum {
     MOUTH_PICKED_UP,
     MOUTH_PUT_DOWN,
     MOUTH_FLIPPED,
-    MOUTH_ANGRY
+    MOUTH_ANGRY,
+    MOUTH_DRIVING
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -146,6 +148,9 @@ static void render(MouthDisplay d) {
         case MOUTH_ANGRY:
             render_expr(angry_expressions, ANGRY_EXPR_COUNT);
             break;
+        case MOUTH_DRIVING:
+            render_expr(driving_expressions, DRIVING_EXPR_COUNT);
+            break;
         default:
             lcd.clear();
             break;
@@ -207,6 +212,9 @@ void mouth_update(uint32_t now_ms) {
     if (g_transient != MOUTH_IDLE) {
         // transient always wins
         desired = g_transient;
+
+    } else if (drive_get_direction() == DRIVE_FORWARD) {
+        desired = MOUTH_DRIVING;
 
     } else if (ctx == CONTEXT_CONVERSING) {
         if(carc == BEHAVIOR_ASLEEP) {

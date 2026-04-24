@@ -19,6 +19,7 @@
 #include "interpreters/proximity_interpreter.h"
 #include "sensors/proximity_sensor.h"
 #include "sensors/mpu6050.h"
+#include "actuators/drive.h"
 
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
@@ -57,6 +58,8 @@ static bool conversation_sound_played = false;
 static bool goodbye_sound_played = false;
 static bool lingering_sound_played = false;
 static uint32_t last_goodbye_time = 0;
+static uint32_t next_drive_beep_ms = 0;
+static DriveDirection last_drive_dir = DRIVE_STOP;
 
 
 BehaviorContext system_controller_get_context(void) {
@@ -179,7 +182,7 @@ if (timer_active(&lingering_timer, now_ms)) {
     // --------------------------
 
     if (emo.transient != TRANSIENT_STARTLED && emo.base != EMOTION_ANGRY) {
-    if (sound.noise)
+    if (sound.noise && !drive_is_manual_active(now_ms))
         current_context = CONTEXT_ANNOYED;
     else if (sound.talking) {
         current_context = CONTEXT_LISTENING;
@@ -260,6 +263,11 @@ if (timer_active(&lingering_timer, now_ms)) {
     else
     {
         intent.base = EYES_BASE_AWAKE;
+    }
+
+    if (drive_get_direction() == DRIVE_FORWARD) {
+        intent.override_mood = true;
+        intent.mood = EYES_MOOD_HAPPY;
     }
 
     // --------------------------
@@ -538,6 +546,29 @@ if (behavior == BEHAVIOR_BORED) {
         intent.eye_height_R = SQUINT;
     }
     
+    // --------------------------
+    // Drive sounds
+    // --------------------------
+    DriveDirection drive_dir = drive_get_direction();
+
+    if (!g_sound_intent.play) {
+        if ((drive_dir == DRIVE_LEFT || drive_dir == DRIVE_RIGHT) &&
+             drive_dir != last_drive_dir) {
+            g_sound_intent.play    = true;
+            g_sound_intent.pattern = SOUND_SPIN;
+        } else if (drive_dir == DRIVE_FORWARD) {
+            if (next_drive_beep_ms == 0) {
+                next_drive_beep_ms = now_ms + (uint32_t)random(8000, 15000);
+            } else if (now_ms >= next_drive_beep_ms) {
+                next_drive_beep_ms = now_ms + (uint32_t)random(8000, 15000);
+                g_sound_intent.play    = true;
+                g_sound_intent.pattern = SOUND_DRIVE_HAPPY;
+            }
+        }
+    }
+    if (drive_dir != DRIVE_FORWARD) next_drive_beep_ms = 0;
+    last_drive_dir = drive_dir;
+
     eyes_set_intent(&intent);
     arms_set_intent(&arms_intent);
     prev_context = current_context;

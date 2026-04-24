@@ -61,10 +61,10 @@ static void bluetooth_handle_cmd(unsigned char cmd, uint32_t now_ms) {
             bluetooth_drive(DRIVE_BACKWARD, current_speed);
             break;
         case CMD_DRIVE_LEFT:
-            bluetooth_drive(DRIVE_LEFT, current_speed);
+            bluetooth_drive(DRIVE_RIGHT, current_speed);
             break;
         case CMD_DRIVE_RIGHT:
-            bluetooth_drive(DRIVE_RIGHT, current_speed);
+            bluetooth_drive(DRIVE_LEFT, current_speed);
             break;
         case CMD_DRIVE_STOP:
             bluetooth_drive(DRIVE_STOP, 0);

@@ -1,52 +1,9 @@
-To finish phase 1:
 
-- Add sound detection & its logic (Startle, talking, general noise)
-
--- Detect sound burst. Detect talking / music. If music, noise, or talking is detected while it sleeps, wake it up, and make it angy.
-
--- Dance to music
-
--- More attentive and wider eyes when listening (talking event)
-
--- Talk at random during conversation
-
--- Make angy noise when noisy.
-
-(By 20th Feb)
-
-So overall it can:
-
-- Sleep when dark. Awake when bright, one eye when semi bright, squint when too bright.
-- You can startle it with sudden burst of noise. You can annoy it with general noise.
-- You can make it happy and dance if it thinks it hears music
-- Its happy if thinks you are talking to it, and it will even talk back.
-- However if you talk to it or play music while it sleeps, it will be angy.
-- It sweats if its too hot, and if its hot for too long, it cant sleep and gets very uncomfortable and asks for cooldown!
-- If its too cold, it will tremble, and if its cold for too long, it will be too cold and ask to be warmed up!
-- It wont dance or listen if its uncomfortable
-
-Phase 2 goals:
-
-- Give it arms so it can wave. It will wave if it seems something close. Needs a sonic sensor!
-- Sonic sensor will look around if its in exploratory mood.
-- If its laughing, it will wave hands very quickly.
-- If its scared, it will attack !
-- iF its startled, it will attack !
-- Try a 2nd screen for communication. When works: make robootie say stuff depending on mood or event.
-
-(By 10th March)
-
-Phase 3 goals:
-
-- Test motors & get every module needed
-- Solder and combine Robootie and make it compact so its transportable.
-- Put the wheels and motors together on Robootie, essentially completing its body.
-- Test driving and collission detection
-
-(By 10th April)
-
-Phase 4:
-
-- Complete personality, add more fun stuff. Optimize and maybe even 3D print a nice body. Optimize, optimize optimize.
-
-(Throughout summer)
+PIN 23 =  ? 
+PIN: 25 = GOOD 
+PIN 29 = GOOD
+PIN 31 = 
+PIN 33 =
+PIN 35 = GOOD
+PIN 39 = GOOD
+PIN 41 = GOODH

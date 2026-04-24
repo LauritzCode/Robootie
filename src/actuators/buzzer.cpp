@@ -19,6 +19,8 @@ static uint32_t last_step_time = 0;
 static void generate_brief_react_pattern();
 static void generate_laugh_pattern();
 static void generate_spook_pattern();
+static void generate_spin_pattern();
+static void generate_drive_happy_pattern();
 
 
 void buzzer_apply_intent(const SoundIntent* intent)
@@ -41,6 +43,14 @@ void buzzer_apply_intent(const SoundIntent* intent)
 
         case SOUND_SPOOK:
             generate_spook_pattern();
+            break;
+
+        case SOUND_SPIN:
+            generate_spin_pattern();
+            break;
+
+        case SOUND_DRIVE_HAPPY:
+            generate_drive_happy_pattern();
             break;
 
         default:
@@ -117,4 +127,22 @@ static void generate_spook_pattern()
         pattern_buffer[i].frequency = random(1500, 2600);
         pattern_buffer[i].duration_ms = random(10, 80);
     }
+}
+
+static void generate_spin_pattern()
+{
+    // Rising cheerful beep — wheee!
+    pattern_length = 4;
+    pattern_buffer[0] = {800,  60};
+    pattern_buffer[1] = {1100, 60};
+    pattern_buffer[2] = {1400, 60};
+    pattern_buffer[3] = {1800, 100};
+}
+
+static void generate_drive_happy_pattern()
+{
+    // Short happy chirp — occasional boop while cruising
+    pattern_length = 2;
+    pattern_buffer[0] = {1200, 60};
+    pattern_buffer[1] = {1500, 80};
 }

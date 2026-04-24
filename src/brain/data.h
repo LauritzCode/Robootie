@@ -681,6 +681,32 @@ static const LcdExpr flipped_expressions[] PROGMEM = {
 #define FLIPPED_EXPR_COUNT 10
 
 // ─────────────────────────────────────────────
+// DRIVING (manual forward — happy)
+// ─────────────────────────────────────────────
+static const char dr_0_1[]  PROGMEM = "weeee!! :D";     static const char dr_0_2[]  PROGMEM = "";
+static const char dr_1_1[]  PROGMEM = "zoom zoom!!";    static const char dr_1_2[]  PROGMEM = "";
+static const char dr_2_1[]  PROGMEM = "let's GO!!";     static const char dr_2_2[]  PROGMEM = "";
+static const char dr_3_1[]  PROGMEM = "VROOM!!";        static const char dr_3_2[]  PROGMEM = "";
+static const char dr_4_1[]  PROGMEM = "woohoo!! :D";    static const char dr_4_2[]  PROGMEM = "";
+static const char dr_5_1[]  PROGMEM = "going fast!!";   static const char dr_5_2[]  PROGMEM = "";
+static const char dr_6_1[]  PROGMEM = "im flying!!";    static const char dr_6_2[]  PROGMEM = "";
+static const char dr_7_1[]  PROGMEM = "faster!! :D";    static const char dr_7_2[]  PROGMEM = "";
+static const char dr_8_1[]  PROGMEM = "on the move!";   static const char dr_8_2[]  PROGMEM = "";
+static const char dr_9_1[]  PROGMEM = "ROAD TRIP!!";    static const char dr_9_2[]  PROGMEM = "";
+static const char dr_10_1[] PROGMEM = "beep beep!!";    static const char dr_10_2[] PROGMEM = "";
+static const char dr_11_1[] PROGMEM = "lets goooo!";    static const char dr_11_2[] PROGMEM = "";
+static const char dr_12_1[] PROGMEM = "whoooosh!";      static const char dr_12_2[] PROGMEM = "";
+static const char dr_13_1[] PROGMEM = "here I come!";   static const char dr_13_2[] PROGMEM = "";
+static const char dr_14_1[] PROGMEM = "full speed";     static const char dr_14_2[] PROGMEM = "ahead!! :D";
+
+static const LcdExpr driving_expressions[] PROGMEM = {
+    {dr_0_1,dr_0_2},{dr_1_1,dr_1_2},{dr_2_1,dr_2_2},{dr_3_1,dr_3_2},{dr_4_1,dr_4_2},
+    {dr_5_1,dr_5_2},{dr_6_1,dr_6_2},{dr_7_1,dr_7_2},{dr_8_1,dr_8_2},{dr_9_1,dr_9_2},
+    {dr_10_1,dr_10_2},{dr_11_1,dr_11_2},{dr_12_1,dr_12_2},{dr_13_1,dr_13_2},{dr_14_1,dr_14_2},
+};
+#define DRIVING_EXPR_COUNT 15
+
+// ─────────────────────────────────────────────
 // ANGRY (woken up — cycles every ~10s during angry timer)
 // ─────────────────────────────────────────────
 static const char an_0_1[] PROGMEM = "I ATTACK!";       static const char an_0_2[] PROGMEM = ">:(";

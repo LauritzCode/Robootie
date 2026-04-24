@@ -6,7 +6,9 @@ typedef enum SoundPatternID
     SOUND_NONE = 0,
     SOUND_BRIEF_REACT,
     SOUND_LAUGH,
-    SOUND_SPOOK
+    SOUND_SPOOK,
+    SOUND_SPIN,
+    SOUND_DRIVE_HAPPY
 } SoundPatternID;
 
 typedef struct SoundIntent

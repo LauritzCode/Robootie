@@ -46,7 +46,7 @@ void setup(void)
     arms_init();
     proximity_init();
     bluetooth_init();
-    motion_sensor_init();
+    // motion_sensor_init();    // DISABLED: not needed until autonomous mode
     Wire.setWireTimeout(25000, true);  // 25ms I2C timeout — long enough to not fire during normal LCD writes
 }
 
@@ -71,5 +71,5 @@ void loop(void)
     proximity_update(now);
     bluetooth_update(now);
     drive_update(now);
-    motion_sensor_update(now);
+    // motion_sensor_update(now); // DISABLED: not needed until autonomous mode
 }
