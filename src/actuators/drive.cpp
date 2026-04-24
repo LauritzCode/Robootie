@@ -70,18 +70,10 @@ void drive_update(uint32_t now_ms) {
             all_run(false, false, false, false, s);
             break;
         case DRIVE_LEFT:
-            // spin left: left side back, right side forward
-            motor_run(MOTOR_FL_PWM, MOTOR_FL_IN1, MOTOR_FL_IN2, false, s);
-            motor_run(MOTOR_RL_PWM, MOTOR_RL_IN1, MOTOR_RL_IN2, false, s);
-            motor_run(MOTOR_FR_PWM, MOTOR_FR_IN1, MOTOR_FR_IN2, true,  s);
-            motor_run(MOTOR_RR_PWM, MOTOR_RR_IN1, MOTOR_RR_IN2, true,  s);
+            all_run(false, true, false, true, s);
             break;
         case DRIVE_RIGHT:
-            // spin right: left side forward, right side back
-            motor_run(MOTOR_FL_PWM, MOTOR_FL_IN1, MOTOR_FL_IN2, true,  s);
-            motor_run(MOTOR_RL_PWM, MOTOR_RL_IN1, MOTOR_RL_IN2, true,  s);
-            motor_run(MOTOR_FR_PWM, MOTOR_FR_IN1, MOTOR_FR_IN2, false, s);
-            motor_run(MOTOR_RR_PWM, MOTOR_RR_IN1, MOTOR_RR_IN2, false, s);
+            all_run(true, false, true, false, s);
             break;
         case DRIVE_BRAKE:
             motor_brake(MOTOR_FL_PWM, MOTOR_FL_IN1, MOTOR_FL_IN2);

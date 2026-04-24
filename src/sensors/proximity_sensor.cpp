@@ -43,7 +43,6 @@ void proximity_update(uint32_t now_ms) {
     last_read_time = now_ms;
 
     uint16_t distance = lox.readRange();
-    Serial.print("[PROX] "); Serial.print(distance); Serial.println("mm");
 
     if (proximity_state == PROXIMITY_FAR) {
         // Waiting for someone to arrive — need NEAR_CONFIRM_MS of close readings
