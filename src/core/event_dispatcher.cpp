@@ -10,8 +10,10 @@
 #include "actuators/arms.h"
 #include "interpreters/proximity_interpreter.h"
 #include "actuators/drive.h"
+#include "brain/explore.h"
 
 static bool is_manual_suppressed(const Event *e) {
+    if (behavior_fsm_get_state() == BEHAVIOR_EXPLORE) return false;
     if (!drive_is_manual_active(e->timestamp_ms)) return false;
     switch (e->type) {
         case EVENT_MOTION_SHAKEN:
@@ -40,6 +42,7 @@ void dispatch_events(void) {
         if (is_manual_suppressed(&event)) continue;
 
         behavior_fsm_handle_event(&event);
+        explore_handle_event(&event);
         system_controller_handle_event(&event);
         comfort_interpreter_handle_event(&event);
         light_interpreter_handle_event(&event);

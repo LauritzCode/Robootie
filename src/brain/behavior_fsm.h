@@ -6,7 +6,8 @@ typedef enum
 {
     BEHAVIOR_ASLEEP = 0,
     BEHAVIOR_AWAKE,
-    BEHAVIOR_BORED
+    BEHAVIOR_BORED,
+    BEHAVIOR_EXPLORE
 } BehaviorState;
 
 

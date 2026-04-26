@@ -1,5 +1,6 @@
 #include "bluetooth.h"
 #include "brain/behavior_fsm.h"
+#include "brain/explore.h"
 #include <Arduino.h>
 #include "core/event_queue.h"
 #include "actuators/drive.h"
@@ -81,6 +82,12 @@ static void bluetooth_handle_cmd(unsigned char cmd, uint32_t now_ms) {
             Serial.print("Speed: "); Serial.println(current_speed);
             break;
 
+        case CMD_EXPLORE_START:
+            explore_start(now_ms);
+            break;
+        case CMD_EXPLORE_QUIT:
+            explore_quit();
+            break;
         case CMD_TEST_FL: drive_test_motor(0, 180); break;
         case CMD_TEST_FR: drive_test_motor(1, 180); break;
         case CMD_TEST_RL: drive_test_motor(2, 180); break;

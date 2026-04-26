@@ -20,6 +20,7 @@
 #include "sensors/proximity_sensor.h"
 #include "sensors/mpu6050.h"
 #include "actuators/drive.h"
+#include "brain/explore.h"
 
 static SoundIntent g_sound_intent;
 static ComfortState current_comfort;
@@ -452,7 +453,7 @@ if (timer_active(&lingering_timer, now_ms)) {
     // Boredom // // 
 
     // // // // // // 
-if (!timer_active(&boredom_timer, now_ms) && !boredom_triggered) {
+if (!timer_active(&boredom_timer, now_ms) && !boredom_triggered && behavior != BEHAVIOR_EXPLORE) {
     boredom_triggered = true;
 }
 
@@ -461,7 +462,7 @@ if (timer_active(&boredom_timer, now_ms)) {
 }
 
 
-if(boredom_triggered) {
+if(boredom_triggered && behavior != BEHAVIOR_EXPLORE) {
     behavior_fsm_set_state(BEHAVIOR_ASLEEP);
     sleep_disturbance_count = 0;
     sleep_wake_threshold = (uint8_t)random(1, 6); // 1–5 disturbances needed to wake
@@ -568,6 +569,21 @@ if (behavior == BEHAVIOR_BORED) {
     }
     if (drive_dir != DRIVE_FORWARD) next_drive_beep_ms = 0;
     last_drive_dir = drive_dir;
+
+    // Explore final override — must come last so nothing else clobbers it
+    if (behavior == BEHAVIOR_EXPLORE) {
+        intent.base = EYES_BASE_AWAKE;
+        if (explore_is_trapped()) {
+            intent.override_mood = true;
+            intent.mood = EYES_MOOD_ANGRY;
+            arms_intent.pose = ARMS_ATTACK;
+        } else {
+            intent.override_mood = true;
+            intent.mood = EYES_MOOD_HAPPY;
+            arms_intent.pose = explore_is_waving() ? ARMS_WAVE : ARMS_IDLE;
+        }
+        arms_intent.one_shot = false;
+    }
 
     eyes_set_intent(&intent);
     arms_set_intent(&arms_intent);

@@ -10,6 +10,7 @@
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
 static ProximityState proximity_state = PROXIMITY_FAR;
+static uint16_t       last_distance   = 9999;
 static uint32_t last_read_time    = 0;
 static uint32_t confirm_near_ms   = 0;  // when we first started seeing close readings
 static uint32_t confirm_far_ms    = 0;  // when we first started seeing empty readings
@@ -43,6 +44,7 @@ void proximity_update(uint32_t now_ms) {
     last_read_time = now_ms;
 
     uint16_t distance = lox.readRange();
+    last_distance = distance;
 
     if (proximity_state == PROXIMITY_FAR) {
         // Waiting for someone to arrive — need NEAR_CONFIRM_MS of close readings
@@ -72,4 +74,12 @@ void proximity_update(uint32_t now_ms) {
             confirm_far_ms = 0;
         }
     }
+}
+
+uint16_t proximity_get_last_distance(void) {
+    return last_distance;
+}
+
+ProximityState proximity_get_state(void) {
+    return proximity_state;
 }

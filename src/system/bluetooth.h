@@ -24,6 +24,9 @@
 #define CMD_DRIVE_SPEED_UP   'u'
 #define CMD_DRIVE_SPEED_DOWN 'd'
 
+#define CMD_EXPLORE_START 'E'   // begin autonomous explore mode
+#define CMD_EXPLORE_QUIT  'Q'   // manually quit explore mode
+
 // Motor isolation test — one motor at a time, PWM 180, stop with 's'
 #define CMD_TEST_FL  'A'   // Driver1 MotorA (code: front-left)
 #define CMD_TEST_FR  'B'   // Driver1 MotorB (code: front-right)

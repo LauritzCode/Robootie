@@ -26,8 +26,10 @@ void behavior_fsm_handle_event(const Event *event) {
         case BEHAVIOR_BORED:
         handle_bored_state(event);
         break;
-        default: 
-        // should never happen
+        case BEHAVIOR_EXPLORE:
+        // transitions managed by explore.cpp
+        break;
+        default:
         break;
     }
 }

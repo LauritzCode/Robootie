@@ -18,6 +18,7 @@
 #include "interpreters/sound_interpreter.h"
 #include "sensors/mpu6050.h"
 #include "actuators/drive.h"
+#include "brain/explore.h"
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
@@ -51,7 +52,9 @@ typedef enum {
     MOUTH_PUT_DOWN,
     MOUTH_FLIPPED,
     MOUTH_ANGRY,
-    MOUTH_DRIVING
+    MOUTH_DRIVING,
+    MOUTH_EXPLORE_SILLY,
+    MOUTH_EXPLORE_SCAN
 } MouthDisplay;
 
 static MouthDisplay g_current  = MOUTH_IDLE;
@@ -151,6 +154,12 @@ static void render(MouthDisplay d) {
         case MOUTH_DRIVING:
             render_expr(driving_expressions, DRIVING_EXPR_COUNT);
             break;
+        case MOUTH_EXPLORE_SILLY:
+            render_expr(explore_silly_expressions, EXPLORE_SILLY_EXPR_COUNT);
+            break;
+        case MOUTH_EXPLORE_SCAN:
+            render_expr(explore_scan_expressions, EXPLORE_SCAN_EXPR_COUNT);
+            break;
         default:
             lcd.clear();
             break;
@@ -215,6 +224,17 @@ void mouth_update(uint32_t now_ms) {
 
     } else if (drive_get_direction() == DRIVE_FORWARD) {
         desired = MOUTH_DRIVING;
+
+    } else if (carc == BEHAVIOR_EXPLORE) {
+        if (explore_is_trapped())
+            desired = MOUTH_ANGRY;
+        else if (explore_is_silly())
+            desired = MOUTH_EXPLORE_SILLY;
+        else if (explore_is_greeting() || explore_is_waving())
+            desired = MOUTH_GREETING;
+        else if (explore_is_scanning())
+            desired = MOUTH_EXPLORE_SCAN;
+        // else MOUTH_IDLE (backup / driving)
 
     } else if (ctx == CONTEXT_CONVERSING) {
         if(carc == BEHAVIOR_ASLEEP) {

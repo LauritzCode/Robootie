@@ -96,10 +96,12 @@ void drive_handle_event(const Event *event) {}
 
 void drive_set_intent(const DriveIntent *intent) {
     test_mode = false;
-    current_intent = *intent;
     last_intent_ms = millis();
     last_manual_ms = last_intent_ms;
-    Serial.print("[DRIVE] intent set: dir="); Serial.print(intent->direction); Serial.print(" spd="); Serial.println(intent->speed);
+    if (intent->direction != current_intent.direction || intent->speed != current_intent.speed) {
+        Serial.print("[DRIVE] dir="); Serial.print(intent->direction); Serial.print(" spd="); Serial.println(intent->speed);
+    }
+    current_intent = *intent;
 }
 
 DriveDirection drive_get_direction(void) {

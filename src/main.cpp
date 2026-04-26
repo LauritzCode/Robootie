@@ -22,6 +22,7 @@
 #include "system/bluetooth.h"
 #include "actuators/drive.h"
 #include "sensors/mpu6050.h"
+#include "brain/explore.h"
 
 
 
@@ -46,6 +47,7 @@ void setup(void)
     arms_init();
     proximity_init();
     bluetooth_init();
+    explore_init();
     // motion_sensor_init();    // DISABLED: not needed until autonomous mode
     Wire.setWireTimeout(25000, true);  // 25ms I2C timeout — long enough to not fire during normal LCD writes
 }
@@ -71,5 +73,7 @@ void loop(void)
     proximity_update(now);
     bluetooth_update(now);
     drive_update(now);
+    explore_update(now);
+    buzzer_apply_intent(explore_get_sound_intent());
     // motion_sensor_update(now); // DISABLED: not needed until autonomous mode
 }

@@ -725,3 +725,37 @@ static const LcdExpr angry_expressions[] PROGMEM = {
     {an_5_1,an_5_2},{an_6_1,an_6_2},{an_7_1,an_7_2},{an_8_1,an_8_2},{an_9_1,an_9_2},
 };
 #define ANGRY_EXPR_COUNT 10
+
+// ─────────────────────────────────────────────
+// EXPLORE SILLY (spontaneous spin for fun)
+// ─────────────────────────────────────────────
+static const char xs_0_1[] PROGMEM = "WHEEE!! :D";    static const char xs_0_2[] PROGMEM = "";
+static const char xs_1_1[] PROGMEM = "SPIN!! :D";     static const char xs_1_2[] PROGMEM = "";
+static const char xs_2_1[] PROGMEM = "im a spinner";  static const char xs_2_2[] PROGMEM = ":D";
+static const char xs_3_1[] PROGMEM = "round n round"; static const char xs_3_2[] PROGMEM = ":D";
+static const char xs_4_1[] PROGMEM = "DIZZY!! :D";    static const char xs_4_2[] PROGMEM = "";
+static const char xs_5_1[] PROGMEM = "weeee spin!!";  static const char xs_5_2[] PROGMEM = ":D";
+static const char xs_6_1[] PROGMEM = "spinny boi";    static const char xs_6_2[] PROGMEM = ":D";
+static const char xs_7_1[] PROGMEM = "WHIRLWIND!!";   static const char xs_7_2[] PROGMEM = ":D";
+
+static const LcdExpr explore_silly_expressions[] PROGMEM = {
+    {xs_0_1,xs_0_2},{xs_1_1,xs_1_2},{xs_2_1,xs_2_2},{xs_3_1,xs_3_2},
+    {xs_4_1,xs_4_2},{xs_5_1,xs_5_2},{xs_6_1,xs_6_2},{xs_7_1,xs_7_2},
+};
+#define EXPLORE_SILLY_EXPR_COUNT 8
+
+// ─────────────────────────────────────────────
+// EXPLORE SCAN (looking around curiously)
+// ─────────────────────────────────────────────
+static const char xn_0_1[] PROGMEM = "hmm...";        static const char xn_0_2[] PROGMEM = "looking...";
+static const char xn_1_1[] PROGMEM = "scanning...";   static const char xn_1_2[] PROGMEM = "^_^";
+static const char xn_2_1[] PROGMEM = "where to go";   static const char xn_2_2[] PROGMEM = "next?? :o";
+static const char xn_3_1[] PROGMEM = "exploring!!";   static const char xn_3_2[] PROGMEM = ":D";
+static const char xn_4_1[] PROGMEM = "this way??";    static const char xn_4_2[] PROGMEM = "or that way?";
+static const char xn_5_1[] PROGMEM = "im free!!";     static const char xn_5_2[] PROGMEM = ":D";
+
+static const LcdExpr explore_scan_expressions[] PROGMEM = {
+    {xn_0_1,xn_0_2},{xn_1_1,xn_1_2},{xn_2_1,xn_2_2},
+    {xn_3_1,xn_3_2},{xn_4_1,xn_4_2},{xn_5_1,xn_5_2},
+};
+#define EXPLORE_SCAN_EXPR_COUNT 6
